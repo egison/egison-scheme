@@ -26,8 +26,9 @@
            (() '())
            ((('MState '{} ret) . rs)
             (cons ret (processMStates rs)))
-           ((('MState {[('val x) M t] . mStack} ret) . rs)
-            undefined)
+           ((('MState {[('val f) M t] . mStack} ret) . rs)
+            (let {[next-matomss (M `(val ,(apply f ret)) t)]}
+              (processMStates (append (map (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss) rs))))
            ((('MState {['_ 'Something t] . mStack} ret) . rs)
             (processMStates (cons `(MState ,mStack ,ret) rs)))
            ((('MState {[pvar 'Something t] . mStack} ret) . rs)

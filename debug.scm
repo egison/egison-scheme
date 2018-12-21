@@ -20,4 +20,4 @@
 (match-all '(1 2 3) (List Integer) [`(join _ (cons x _)) x])
 (match-all '(1 2 3) (List Integer) [`(join _ (cons x (join _ (cons y _)))) `(,x ,y)])
 (match-all '(1 2 3) (Multiset Integer) [`(cons x (cons y _)) `(,x ,y)])
-(match-all '(1 2 3 1) (List Integer) [`(join _ (cons x (join _ (cons (val x) _)))) `(,x ,y)])
+(match-all '(1 2 3 1) (List Integer) [`(join _ (cons x (join _ (cons (val ,(lambda (x) x)) _)))) x])
