@@ -1,5 +1,7 @@
 (use util.match)
 (use srfi-1)
+(use gauche.lazy)
+(use math.prime)
 
 (define-macro (match-all t M . clauses)
   (let* {[clause (car clauses)]
@@ -25,9 +27,9 @@
     (match mStates
            (() '())
            ((('MState '{} ret) . rs)
-            (cons ret (processMStatesDFS rs)))
+            (lcons ret (processMStatesDFS rs)))
            ((mState . rs)
-            (processMStatesDFS (append (processMState mState) rs)))
+            (processMStatesDFS (lappend (processMState mState) rs)))
            )))
 
 (define processMState
@@ -42,7 +44,7 @@
             `((MState ,mStack ,(append ret `(,t)))))
            (('MState {[p M t] . mStack} ret)
             (let {[next-matomss (M p t)]}
-              (map (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss)))
+              (lmap (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss)))
            )))
 
 (define Something 'Something)
@@ -71,8 +73,8 @@
                       `(((,px ,M ,x) (,py ,(List M) ,xs)))
                       )))
              (('join px py)
-              (map (lambda (xy) `((,px ,(List M) ,(car xy)) (,py ,(List M) ,(cadr xy))))
-                   (unjoin t)))
+              (lmap (lambda (xy) `((,px ,(List M) ,(car xy)) (,py ,(List M) ,(cadr xy))))
+                    (unjoin t)))
              (('val x)
               (if (eq? x t)
                   '(())
@@ -90,7 +92,10 @@
     (match xs
            (() ret)
            ((y . ys)
-            (cons `(() ,xs) (map (lambda (p) `(,(cons y (car p)) ,(cadr p))) (unjoin ys))))
+;            (lcons `(() ,xs) (unjoin ys)))
+;            (lcons `(() ,xs) (lmap (lambda (p) p) (unjoin ys))))
+;            (lcons `(() ,xs) (lmap (lambda (p) `(,(lcons y (car p)) ,(cadr p))) (unjoin ys))))
+            (lcons `(() ,xs) (lmap (lambda (p) `(,(lcons y (car p)) ,(cadr p))) (unjoin ys))))
            )))
 
 (define Multiset

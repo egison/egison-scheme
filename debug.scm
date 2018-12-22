@@ -7,6 +7,7 @@
 (extract-pattern-variables '(join _ (cons x (join _ (cons (val x) _)))))
 (extract-pattern-variables '(join _ (cons x (join _ (cons y _)))))
 (extract-pattern-variables `(cons x y))
+(extract-pattern-variables `(join _ (cons p (cons (val ,(lambda (p) (+ p 2))) _))))
 
 (gen-match-results 'x 'Something 10)
 
@@ -23,7 +24,10 @@
 (match-all '(1 2 3) (List Integer) [`(join _ (cons x (join _ (cons y _)))) `(,x ,y)])
 (match-all '(1 2 3) (Multiset Integer) [`(cons x (cons y _)) `(,x ,y)])
 (match-all '(1 2 3 2 1) (List Integer) [`(join _ (cons x (join _ (cons (val ,(lambda (x) x)) _)))) x])
+(take (match-all (take *primes* 300) (List Integer) [`(join _ (cons p (cons (val ,(lambda (p) (+ p 2))) _))) `(,p ,(+ p 2))]) 10)
+(take (lmap car (unjoin *primes*)) 10)
 
+(map car (unjoin (take *primes* 10)))
 (define pm-map
   (lambda (f xs)
     (match-all xs (List Something)
