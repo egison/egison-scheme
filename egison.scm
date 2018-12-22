@@ -18,24 +18,31 @@
            )))
 
 (define-macro (gen-match-results p M t)
-  `(processMStates (list (list 'MState (list (list ,p ,M ,t) ) {}))))
+  `(processMStatesDFS (list (list 'MState (list (list ,p ,M ,t) ) {}))))
 
-(define processMStates
+(define processMStatesDFS
   (lambda (mStates)
     (match mStates
            (() '())
            ((('MState '{} ret) . rs)
-            (cons ret (processMStates rs)))
-           ((('MState {[('val f) M t] . mStack} ret) . rs)
+            (cons ret (processMStatesDFS rs)))
+           ((mState . rs)
+            (processMStatesDFS (append (processMState mState) rs)))
+           )))
+
+(define processMState
+  (lambda (mState)
+    (match mState
+           (('MState {[('val f) M t] . mStack} ret)
             (let {[next-matomss (M `(val ,(apply f ret)) t)]}
-              (processMStates (append (map (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss) rs))))
-           ((('MState {['_ 'Something t] . mStack} ret) . rs)
-            (processMStates (cons `(MState ,mStack ,ret) rs)))
-           ((('MState {[pvar 'Something t] . mStack} ret) . rs)
-            (processMStates (cons `(MState ,mStack ,(append ret `(,t))) rs)))
-           ((('MState {[p M t] . mStack} ret) . rs)
+              (map (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss)))
+           (('MState {['_ 'Something t] . mStack} ret)
+            `((MState ,mStack ,ret)))
+           (('MState {[pvar 'Something t] . mStack} ret)
+            `((MState ,mStack ,(append ret `(,t)))))
+           (('MState {[p M t] . mStack} ret)
             (let {[next-matomss (M p t)]}
-              (processMStates (append (map (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss) rs))))
+              (map (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss)))
            )))
 
 (define Something 'Something)
