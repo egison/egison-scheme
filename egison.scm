@@ -1,7 +1,5 @@
 (use util.match)
 (use srfi-1)
-(use gauche.lazy)
-(use math.prime)
 
 (define-macro (match-all t M . clauses)
   (let* {[clause (car clauses)]
@@ -20,16 +18,16 @@
            )))
 
 (define-macro (gen-match-results p M t)
-  `(processMStatesDFS (list (list 'MState (list (list ,p ,M ,t) ) {}))))
+  `(processMStates (list (list 'MState (list (list ,p ,M ,t) ) {}))))
 
-(define processMStatesDFS
+(define processMStates
   (lambda (mStates)
     (match mStates
            (() '())
            ((('MState '{} ret) . rs)
-            (lcons ret (processMStatesDFS rs)))
+            (cons ret (processMStates rs)))
            ((mState . rs)
-            (processMStatesDFS (lappend (processMState mState) rs)))
+            (processMStates (append (processMState mState) rs)))
            )))
 
 (define processMState
@@ -44,7 +42,7 @@
             `((MState ,mStack ,(append ret `(,t)))))
            (('MState {[p M t] . mStack} ret)
             (let {[next-matomss (M p t)]}
-              (lmap (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss)))
+              (map (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss)))
            )))
 
 (define Something 'Something)
@@ -73,7 +71,7 @@
                       `(((,px ,M ,x) (,py ,(List M) ,xs)))
                       )))
              (('join px py)
-              (lmap (lambda (xy) `((,px ,(List M) ,(car xy)) (,py ,(List M) ,(cadr xy))))
+              (map (lambda (xy) `((,px ,(List M) ,(car xy)) (,py ,(List M) ,(cadr xy))))
                     (unjoin t)))
              (('val x)
               (if (eq? x t)
@@ -92,10 +90,7 @@
     (match xs
            (() ret)
            ((y . ys)
-;            (lcons `(() ,xs) (unjoin ys)))
-;            (lcons `(() ,xs) (lmap (lambda (p) p) (unjoin ys))))
-;            (lcons `(() ,xs) (lmap (lambda (p) `(,(lcons y (car p)) ,(cadr p))) (unjoin ys))))
-            (lcons `(() ,xs) (lmap (lambda (p) `(,(lcons y (car p)) ,(cadr p))) (unjoin ys))))
+            (cons `(() ,xs) (map (lambda (p) `(,(cons y (car p)) ,(cadr p))) (unjoin ys))))
            )))
 
 (define Multiset
