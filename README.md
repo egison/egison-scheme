@@ -78,7 +78,7 @@ The order of the pattern variables corresponds with the order they appeared in t
 The pattern-matching results consist of values that are going to bound to the pattern variables returned by `extract-pattern-variables`.
 The order of the values in the pattern-matching results must correspond with the order of pattern variables returned by `extract-pattern-variables`.
 
-### Transform value patterns into lambda
+### Value patterns are transformed into lambda
 
 ```
 (match-all '(1 2 3 2 1) (List Integer)
@@ -95,7 +95,7 @@ We would like describe non-linear patterns as follows,
 
 ```
 (match-all '(1 2 3 2 1) (List Integer)
-  [`(join _ (cons x (join _ (cons (val ,x) _))))
+  [`(join _ (cons x (join _ (cons ,x _))))
    x])
 ; (1 2)
 ```
