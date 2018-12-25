@@ -1,10 +1,10 @@
+(use math.prime)
+
 ;;
 ;; Debug
 ;;
 
-(use math.prime)
-
-(extract-pattern-variables '(join _ (cons x (join _ (cons (val x) _)))))
+(extract-pattern-variables '(join _ (cons x (join _ (cons (val ,(lambda (x) x)) _)))))
 (extract-pattern-variables '(join _ (cons x (join _ (cons y _)))))
 (extract-pattern-variables `(cons x y))
 (extract-pattern-variables `(join _ (cons p (cons (val ,(lambda (p) (+ p 2))) _))))
@@ -13,6 +13,10 @@
 
 (macroexpand '(match-all 10 Something [x x]))
 (macroexpand '(gen-match-results x Something 10))
+
+;;
+;; Test
+;;
 
 (match-all 10 Something ['x x])
 (match-all 10 Eq [`(val ,(lambda () 10)) "OK"])
@@ -27,11 +31,3 @@
 (take (match-all (take *primes* 300) (List Integer) [`(join _ (cons p (cons (val ,(lambda (p) (+ p 2))) _))) `(,p ,(+ p 2))]) 10)
 
 (match-first '(1 2 3 2 1) (List Integer) [`(join _ (cons x (join _ (cons (val ,(lambda (x) x)) _)))) x])
-
-(match-first '(1 2 2 3) (Multiset Integer)
-             {
-              [`(cons x (cons (val ,(lambda (x) x)) (cons (val ,(lambda (x) x)) _))) "Three of kinds"]
-              [`(cons x (cons (val ,(lambda (x) (+ x 1))) (cons (val ,(lambda (x) (+ x 2))) _))) "Straight"]
-              })
-
-
