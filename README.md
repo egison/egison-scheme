@@ -3,6 +3,8 @@
 This Scheme library provides users with macros for pattern matching against non-free data types.
 This pattern-matching facility is originally proposed in [this paper](https://arxiv.org/abs/1808.10603) and implemented in [the Egison programming language](http://github.com/egison/egison/).
 
+We have tested this library on [Gauche](http://practical-scheme.net/gauche/).
+
 ## Usage
 
 Non-free data types are data types whose data have no standard forms.
