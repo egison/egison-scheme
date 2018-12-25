@@ -1,16 +1,29 @@
 # Scheme Macro for Egison Pattern Matching
 
-This Scheme library provides users macros for pattern matching against non-free data types.
+This Scheme library provides users with macros for pattern matching against non-free data types.
 This pattern-matching facility is originally proposed in [this paper](https://arxiv.org/abs/1808.10603) and implemented in [the Egison programming language](http://github.com/egison/egison/).
 
 ## Usage
 
-Please see [test.scm](https://github.com/egison/egison-scheme/blob/master/test.scm) and the following samples for now.
+Non-free data types are data types whose data have no standard forms.
+For example, multisets are non-free data types because the multiset {a,b,b} has two other equivalent but literally different forms {b,a,b} and {b,b,a}.
+This library provides users with a pattern-matching facility for these non-free data types.
+
+For example, the following program pattern-matches a list `(1 2 3 2 1)` as a multiset.
+This pattern matches if the target collection contains pairs of elements in sequnece.
+A non-linear pattern is effectively used for expressing the pattern.
+
+```
+(match-all '(1 2 5 9 4) (Multiset Integer) [`(cons x (cons (val ,(lambda (x) (+ x 1))) _)) x])
+; (1 4)
+```
+
+For more examples, please see [test.scm](https://github.com/egison/egison-scheme/blob/master/test.scm) and the following samples for now.
 
 ## Samples
 
-[The basic list functions defined in pattern-matching-oriented programming style](https://github.com/egison/egison-scheme/blob/master/pattern-matching-oriented-programming-style.scm)
-[Poker hands](https://github.com/egison/egison-scheme/blob/master/poker.scm)
+- [The basic list functions defined in pattern-matching-oriented programming style](https://github.com/egison/egison-scheme/blob/master/pattern-matching-oriented-programming-style.scm)
+- [Poker hands](https://github.com/egison/egison-scheme/blob/master/poker.scm)
 
 ## Features of this implementation
 
