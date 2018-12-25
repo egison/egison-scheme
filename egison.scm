@@ -2,10 +2,25 @@
 (use srfi-1)
 
 (define-macro (match-all t M . clauses)
-  (let* {[clause (car clauses)]
-         [p (car clause)]
-         [e (cadr clause)]}
-    `(map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret)) (gen-match-results ,p ,M ,t))))
+  (if (eq? clauses '())
+      '()
+      (let* {[clause (car clauses)]
+             [p (car clause)]
+             [e (cadr clause)]}
+        `(append (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret)) (gen-match-results ,p ,M ,t))
+                 (match-all ,t ,M . ,(cdr clauses))))))
+
+(define-macro (match-first t M . clauses)
+  (if (eq? clauses '())
+      'not-matched
+      (let* {[clause (car clauses)]
+             [p (car clause)]
+             [e (cadr clause)]}
+        `(let {[rets (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret)) (gen-match-results ,p ,M ,t))]}
+           (if (eq? rets  '())
+               (match-first ,t ,M . ,(cdr clauses))
+               (car rets))))))
+
 
 (define extract-pattern-variables
   (lambda (p)

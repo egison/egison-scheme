@@ -26,6 +26,15 @@
 (match-all '(1 2 3 2 1) (List Integer) [`(join _ (cons x (join _ (cons (val ,(lambda (x) x)) _)))) x])
 (take (match-all (take *primes* 300) (List Integer) [`(join _ (cons p (cons (val ,(lambda (p) (+ p 2))) _))) `(,p ,(+ p 2))]) 10)
 
+(match-first '(1 2 3 2 1) (List Integer) [`(join _ (cons x (join _ (cons (val ,(lambda (x) x)) _)))) x])
+
+(match-first '(1 2 2 3) (Multiset Integer)
+             {
+              [`(cons x (cons (val ,(lambda (x) x)) (cons (val ,(lambda (x) x)) _))) "Three of kinds"]
+              [`(cons x (cons (val ,(lambda (x) (+ x 1))) (cons (val ,(lambda (x) (+ x 2))) _))) "Straight"]
+              })
+
+
 (define pm-map
   (lambda (f xs)
     (match-all xs (List Something)
