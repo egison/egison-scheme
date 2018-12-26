@@ -1,4 +1,4 @@
-# Scheme Macro for Egison Pattern Matching
+# Scheme Macros for Egison Pattern Matching
 
 This Scheme library provides users with macros for pattern matching against non-free data types.
 This pattern-matching facility is originally proposed in [this paper](https://arxiv.org/abs/1808.10603) and implemented in [the Egison programming language](http://github.com/egison/egison/).
