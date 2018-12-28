@@ -35,3 +35,24 @@
 (take (match-all (take *primes* 300) (List Integer) [`(join _ (cons p (cons ,(+ p 2) _))) `(,p ,(+ p 2))]) 10) ; ((3 5) (5 7) (11 13) (17 19) (29 31) (41 43) (59 61) (71 73) (101 103) (107 109))
 
 (match-first '(1 2 5 7 4) (Multiset Integer) [`(cons x (cons ,(+ x 1) _)) x]) ; 1
+
+(stream->list (lazy-match-all 10 Something ['x x])) ; (10)
+(stream->list (lazy-match-all 10 Integer ['x x])) ; (10)
+(stream->list (lazy-match-all 10 Integer [`,10 "OK"])) ; ("OK")
+(stream->list (lazy-match-all (list->stream '(1 2 3)) (List Integer) [`(cons x y) `(,x ,(stream->list y))])) ; ((1 (2 3)))
+(stream->list (lazy-match-all (list->stream '(1 2 3)) (List Integer) [`(join x y) `(,(stream->list x) ,(stream->list y))])) ; ((() (1 2 3)) ((1) (2 3)) ((1 2) (3)))
+
+(stream->list (stream-take (lazy-match-all (stream-iota -1) (List Integer) [`(join x y) `(,(stream->list x) ,y)]) 10))
+; ((() (1 2 3)) ((1) (2 3)) ((1 2) (3)))
+
+(stream->list (stream-take (lazy-match-all (stream-iota 3) (Multiset Integer) [`(cons x (cons y _)) `(,x ,y)]) 6)) ; ((0 1) (0 2) (1 0) (1 2) (2 0) (2 1))
+
+(define stream-primes (stream-filter bpsw-prime? (stream-iota -1)))
+
+(stream->list
+ (stream-take
+  (lazy-match-all stream-primes (List Integer)
+                  [`(join _ (cons p (cons ,(+ p 2) _)))
+                   `(,p ,(+ p 2))])
+  10))
+; ((3 5) (5 7) (11 13) (17 19) (29 31) (41 43) (59 61) (71 73) (101 103) (107 109))
