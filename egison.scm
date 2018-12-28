@@ -5,7 +5,7 @@
   (if (eq? clauses '())
       '()
       (let* {[clause (car clauses)]
-             [p (car clause)]
+             [p (rewrite-pattern (car clause))]
              [e (cadr clause)]}
         `(append (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret)) (gen-match-results ,p ,M ,t))
                  (match-all ,t ,M . ,(cdr clauses))))))
@@ -14,13 +14,39 @@
   (if (eq? clauses '())
       'not-matched
       (let* {[clause (car clauses)]
-             [p (car clause)]
+             [p (rewrite-pattern (car clause))]
              [e (cadr clause)]}
         `(let {[rets (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret)) (gen-match-results ,p ,M ,t))]}
            (if (eq? rets  '())
                (match-first ,t ,M . ,(cdr clauses))
                (car rets))))))
 
+(define rewrite-pattern
+  (lambda (p)
+    (car (rewrite-pattern-helper p '()))))
+
+(define rewrite-pattern-helper
+  (lambda (p xs)
+        (match p
+               (('unquote q) (cons (list 'val (list 'unquote `(lambda ,xs ,q))) xs))
+               ((c . args)
+                (let {[ret (rewrite-patterns-helper args xs)]}
+                  (cons `(,c . ,(car ret)) (cdr ret))))
+               ('_ (cons '_ xs))
+               (pvar (cons pvar (append xs `(,pvar)))))))
+
+(define rewrite-patterns-helper
+  (lambda (ps xs)
+    (match ps
+           (() (cons '() xs))
+           ((p . qs)
+            (let* {[ret (rewrite-pattern-helper p xs)]
+                   [p2 (car ret)]
+                   [xs2 (cdr ret)]
+                   [ret2 (rewrite-patterns-helper qs xs2)]
+                   [qs2 (car ret2)]
+                   [ys (cdr ret2)]}
+              (cons (cons p2 qs2)  ys))))))
 
 (define extract-pattern-variables
   (lambda (p)

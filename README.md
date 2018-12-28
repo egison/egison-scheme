@@ -16,7 +16,7 @@ This pattern matches if the target collection contains pairs of elements in sequ
 A non-linear pattern is effectively used for expressing the pattern.
 
 ```
-(match-all '(1 2 5 9 4) (Multiset Integer) [`(cons x (cons (val ,(lambda (x) (+ x 1))) _)) x])
+(match-all '(1 2 5 9 4) (Multiset Integer) [`(cons x (cons ,(+ x 1) _)) x])
 ; (1 4)
 ```
 
@@ -82,34 +82,10 @@ The order of the values in the pattern-matching results must correspond with the
 
 ### Value patterns are transformed into lambda
 
-```
-(match-all '(1 2 3 2 1) (List Integer)
-  [`(join _ (cons x (join _ (cons (val ,(lambda (x) x)) _))))
-   x])
-; (1 2)
-```
+Value patterns are transformed into lambda expressions using `rewrite-pattern` inside the macro.
+For example, `(join _ (cons x (join _ (cons ,x _))))` is transformed into `(join _ (cons x (join _ (cons (val ,(lambda (x) x)) _))))`.
 
 ## Future work
-
-### Refinement of the syntax for value patterns
-
-We would like describe non-linear patterns as follows,
-
-```
-(match-all '(1 2 3 2 1) (List Integer)
-  [`(join _ (cons x (join _ (cons ,x _))))
-   x])
-; (1 2)
-```
-
-instead of as follows.
-
-```
-(match-all '(1 2 3 2 1) (List Integer)
-  [`(join _ (cons x (join _ (cons (val ,(lambda (x) x)) _))))
-   x])
-; (1 2)
-```
 
 ### Pattern matching with infinitely many results
 
@@ -122,7 +98,6 @@ If we implement the lazy match-all, we can support pattern matching with infinit
       5)
 ; ((3 5) (5 7) (11 13) (17 19) (29 31))
 ```
-
 
 ### And-patterns, or-patterns, not-patterns, loop-patterns, ...
 

@@ -14,21 +14,24 @@
 (macroexpand '(match-all 10 Something [x x]))
 (macroexpand '(gen-match-results x Something 10))
 
+(macroexpand '(match-all '(1 2 3 2 1) (List Integer)
+                         [`(join _ (cons x (join _ (cons (val ,(lambda (x) x)) _))))
+                          x]))
+
 ;;
 ;; Test
 ;;
 
-(match-all 10 Something ['x x])
-(match-all 10 Eq [`(val ,(lambda () 10)) "OK"])
-(match-all 10 Integer [`(val ,(lambda () 10)) "OK"])
-(match-all 10 Integer [`x x])
-(match-all '(1 2 3) (List Integer) [`(cons x y) `(,x ,y)])
-(match-all '(1 2 3) (List Integer) [`(join x y) `(,x ,y)])
-(match-all '(1 2 3) (List Integer) [`(join _ (cons x _)) x])
-(match-all '(1 2 3) (List Integer) [`(join _ (cons x (join _ (cons y _)))) `(,x ,y)])
-(match-all '(1 2 3) (Multiset Integer) [`(cons x (cons y _)) `(,x ,y)])
-(match-all '(1 2 3 2 1) (List Integer) [`(join _ (cons x (join _ (cons (val ,(lambda (x) x)) _)))) x])
-(match-all '(1 2 3 2 1) (Multiset Integer) [`(cons x (cons (val ,(lambda (x) x)) _)) x])
-(take (match-all (take *primes* 300) (List Integer) [`(join _ (cons p (cons (val ,(lambda (p) (+ p 2))) _))) `(,p ,(+ p 2))]) 10)
+(match-all 10 Something ['x x]) ; ("OK")
+(match-all 10 Eq [`,10 "OK"]) ; ("OK")
+(match-all 10 Integer [`x x]) ; (10)
+(match-all '(1 2 3) (List Integer) [`(cons x y) `(,x ,y)]) ; ((1 (2 3)))
+(match-all '(1 2 3) (List Integer) [`(join x y) `(,x ,y)]) ; ((() (1 2 3)) ((1) (2 3)) ((1 2) (3)))
+(match-all '(1 2 3) (List Integer) [`(join _ (cons x _)) x]) ; (1 2 3)
+(match-all '(1 2 3) (List Integer) [`(join _ (cons x (join _ (cons y _)))) `(,x ,y)]) ; ((1 2) (1 3) (2 3))
+(match-all '(1 2 3) (Multiset Integer) [`(cons x (cons y _)) `(,x ,y)]) ; ((1 2) (1 3) (2 1) (2 3) (3 1) (3 2))
+(match-all '(1 2 3 2 1) (List Integer) [`(join _ (cons x (join _ (cons ,x _)))) x]) ; (1 2)
+(match-all '(1 2 5 7 4) (Multiset Integer) [`(cons x (cons ,(+ x 1) _)) x]) ; (1 4)
+(take (match-all (take *primes* 300) (List Integer) [`(join _ (cons p (cons ,(+ p 2) _))) `(,p ,(+ p 2))]) 10) ; ((3 5) (5 7) (11 13) (17 19) (29 31) (41 43) (59 61) (71 73) (101 103) (107 109))
 
-(match-first '(1 2 3 2 1) (List Integer) [`(join _ (cons x (join _ (cons (val ,(lambda (x) x)) _)))) x])
+(match-first '(1 2 5 7 4) (Multiset Integer) [`(cons x (cons ,(+ x 1) _)) x]) ; 1
