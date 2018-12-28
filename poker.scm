@@ -1,5 +1,6 @@
 (use util.match)
 (use srfi-1)
+(use egison)
 
 (define Mod
   (lambda (n)

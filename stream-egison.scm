@@ -1,8 +1,18 @@
+;(define-module stream-egison
+;  (export match-all
+;          Something
+;          Eq
+;          Integer
+;          List
+;          Multiset
+;          ))
+;(select-module stream-egison)
+
 (use util.match)
 (use srfi-1)
 (use util.stream)
 
-(define-macro (lazy-match-all t M . clauses)
+(define-macro (match-all t M . clauses)
   (if (eq? clauses '())
       '()
       (let* {[clause (car clauses)]
@@ -10,7 +20,7 @@
              [e (cadr clause)]}
         `(stream-append (stream-map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret))
                                     (gen-match-results ,p ,M ,t))
-                  (lazy-match-all ,t ,M . ,(cdr clauses))))))
+                        (match-all ,t ,M . ,(cdr clauses))))))
 
 (define rewrite-pattern
   (lambda (p)
@@ -171,8 +181,8 @@
       (match p
              (('cons px py)
               (stream-map (lambda (xy) `((,px ,M ,(car xy)) (,py ,(Multiset M) ,(cadr xy))))
-                          (lazy-match-all t (List M)
-                                          ['(join hs (cons x ts)) `(,x ,(stream-append hs ts))])))
+                          (match-all t (List M)
+                                     ['(join hs (cons x ts)) `(,x ,(stream-append hs ts))])))
              (pvar
               (stream `((,pvar Something ,t))))
              ))))

@@ -1,3 +1,14 @@
+;(define-module egison
+;  (export match-all
+;          match-first
+;          Something
+;          Eq
+;          Integer
+;          List
+;          Multiset
+;          ))
+;(select-module egison)
+
 (use util.match)
 (use srfi-1)
 
