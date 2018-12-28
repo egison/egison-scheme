@@ -1,6 +1,7 @@
 (use util.match)
 (use srfi-1)
-(use egison)
+
+(load "./egison.scm")
 
 (define Mod
   (lambda (n)

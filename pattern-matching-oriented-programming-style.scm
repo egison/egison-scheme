@@ -1,3 +1,5 @@
+(load "./egison.scm")
+
 (define pm-map
   (lambda (f xs)
     (match-all xs (List Something)
@@ -17,7 +19,7 @@
 (define pm-concat2
   (lambda (xss)
     (match-all xss (Multiset (Multiset Something))
-               (`(cons (cons x _)) x))))
+               (`(cons (cons x _) _) x))))
 
-(pm-concat2 `((1 2) (3) (4 5)))
+(pm-concat2 `((1 2) (3 4) (4 5)))
 ; (1 2 3 4 5)

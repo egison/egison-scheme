@@ -12,20 +12,51 @@ For example, multisets are non-free data types because the multiset {a,b,b} has 
 This library provides users with a pattern-matching facility for these non-free data types.
 
 For example, the following program pattern-matches a list `(1 2 3 2 1)` as a multiset.
-This pattern matches if the target collection contains pairs of elements in sequnece.
+This pattern matches if the target collection contains pairs of elements in sequence.
 A non-linear pattern is effectively used for expressing the pattern.
 
 ```
+(load "./egison.scm")
+
 (match-all '(1 2 5 9 4) (Multiset Integer) [`(cons x (cons ,(+ x 1) _)) x])
 ; (1 4)
+```
+
+`match-all` returns a list of all the results.
+We provides two versions of `match-all` that returns a list and stream.
+`egison.scm` provides the list version.
+`stream-egison.scm` provides the stream version.
+`match-all` of `stream-egison.scm` supports pattern matching with infinitely many results as follows.
+
+```
+(use math.prime)
+(use util.stream)
+
+(load "./stream-egison.scm")
+
+(define stream-primes (stream-filter bpsw-prime? (stream-iota -1)))
+
+(stream->list
+ (stream-take
+  (match-all stream-primes (List Integer)
+             [`(join _ (cons p (cons ,(+ p 2) _)))
+              `(,p ,(+ p 2))])
+  10))
+; ((3 5) (5 7) (11 13) (17 19) (29 31) (41 43) (59 61) (71 73) (101 103) (107 109))
 ```
 
 For more examples, please see [test.scm](https://github.com/egison/egison-scheme/blob/master/test.scm) and the following samples for now.
 
 ## Samples
 
+### Strict pattern matching
+
 - [The basic list functions defined in pattern-matching-oriented programming style](https://github.com/egison/egison-scheme/blob/master/pattern-matching-oriented-programming-style.scm)
 - [Poker hands](https://github.com/egison/egison-scheme/blob/master/poker.scm)
+
+### Lazy pattern matching
+
+- [Twin primes](https://github.com/egison/egison-scheme/blob/master/primes.scm)
 
 ## Features of this implementation
 
@@ -110,3 +141,8 @@ However, additional work is required for implementing this pattern-matching faci
 For these languages, the translated programs need to have types.
 The most difficult part for making being typed is a stack of matching atoms.
 This is because the target type of each matching atom is different, therefore we cannot type a stack of matching atoms as a list of matching atoms simply.
+
+## References
+
+* Satoshi Egi, Yuichi Nishiwaki: [Non-linear Pattern Matching with Backtracking for Non-free Data Types](https://arxiv.org/abs/1808.10603) (APLAS 2018)
+* Satoshi Egi: [Loop Patterns: Extension of Kleene Star Operator for More Expressive Pattern Matching against Arbitrary Data Structures](https://arxiv.org/abs/1809.03252) (Scheme Workshop 2018)

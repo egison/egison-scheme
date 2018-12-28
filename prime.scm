@@ -1,6 +1,8 @@
 (use math.prime)
 (use util.stream)
 
+(load "./stream-egison.scm")
+
 (define stream-primes (stream-filter bpsw-prime? (stream-iota -1)))
 
 (stream->list
