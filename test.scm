@@ -20,6 +20,8 @@
 ;; Egison Test
 ;;
 
+(load "./egison.scm")
+
 (match-all 10 Something ['x x]) ; ("OK")
 (match-all 10 Eq [`,10 "OK"]) ; ("OK")
 (match-all 10 Integer [`x x]) ; (10)
@@ -34,10 +36,21 @@
 
 (match-first '(1 2 5 7 4) (Multiset Integer) [`(cons x (cons ,(+ x 1) _)) x]) ; 1
 
+(match-all 10 Something [`(and x y) `(,x ,y)]) ; ("OK")
+(match-all 10 Integer [`(or ,10 ,20) "OK"]) ; ("OK")
+(match-all 10 Integer [`(or ,20 ,10) "OK"]) ; ("OK")
+(match-all 10 Integer [`(or ,20 ,30) "OK"]) ; ()
+(match-all `(1 1 2) (List Integer) [`(cons x (cons ,x _)) x]) ; (1)
+(match-all `(1 1 2) (List Integer) [`(cons (later y) (cons x _)) `(,x ,y)]) ; ()
+(match-all `(1 1 2) (List Integer) [`(cons (later ,x) (cons x _)) x]) ; (1)
+(match-all `(1 1 2) (List Integer) [`(cons x (cons (not ,x) _)) x]) ; ()
+
 
 ;;
 ;; Stream Egison Test
 ;;
+
+(load "./stream-egison.scm")
 
 (stream->list (match-all 10 Something ['x x])) ; (10)
 (stream->list (match-all 10 Integer ['x x])) ; (10)

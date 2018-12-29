@@ -34,12 +34,15 @@
 
 (define rewrite-pattern
   (lambda (p)
-    (car (rewrite-pattern-helper p '()))))
+    (let {[ret (rewrite-pattern-helper p '())]}
+;      (car ret))))
+      (car (rewrite-later-pattern-helper (car ret) (cdr ret))))))
 
 (define rewrite-pattern-helper
   (lambda (p xs)
         (match p
                (('unquote q) (cons (list 'val (list 'unquote `(lambda ,xs ,q))) xs))
+               (('later p) (cons `(later ,p) xs))
                ((c . args)
                 (let {[ret (rewrite-patterns-helper args xs)]}
                   (cons `(,c . ,(car ret)) (cdr ret))))
@@ -55,6 +58,30 @@
                    [p2 (car ret)]
                    [xs2 (cdr ret)]
                    [ret2 (rewrite-patterns-helper qs xs2)]
+                   [qs2 (car ret2)]
+                   [ys (cdr ret2)]}
+              (cons (cons p2 qs2)  ys))))))
+
+(define rewrite-later-pattern-helper
+  (lambda (p xs)
+    (match p
+           (('later p)
+            (let {[ret (rewrite-pattern-helper p xs)]}
+              (cons `(later ,(car ret)) (cdr ret))))
+           ((c . args)
+            (let {[ret (rewrite-later-patterns-helper args xs)]}
+              (cons `(,c . ,(car ret)) (cdr ret))))
+           (_ (cons p xs)))))
+
+(define rewrite-later-patterns-helper
+  (lambda (ps xs)
+    (match ps
+           (() (cons '() xs))
+           ((p . qs)
+            (let* {[ret (rewrite-later-pattern-helper p xs)]
+                   [p2 (car ret)]
+                   [xs2 (cdr ret)]
+                   [ret2 (rewrite-later-patterns-helper qs xs2)]
                    [qs2 (car ret2)]
                    [ys (cdr ret2)]}
               (cons (cons p2 qs2)  ys))))))
@@ -88,6 +115,18 @@
            (('MState {[('val f) M t] . mStack} ret)
             (let {[next-matomss (M `(val ,(apply f ret)) t)]}
               (map (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss)))
+           (('MState {[('and . ps) M t] . mStack} ret)
+            (let {[next-matoms (map (lambda (p) `[,p ,M ,t]) ps)]}
+              (list `(MState ,(append next-matoms mStack) ,ret))))
+           (('MState {[('or . ps) M t] . mStack} ret)
+            (let {[next-matomss (map (lambda (p) `{[,p ,M ,t]}) ps)]}
+              (map (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss)))
+           (('MState {[('not p) M t] . mStack} ret)
+            (if (null? (processMStates (list `(MState {[,p ,M ,t]} ,ret))))
+                (list `(MState ,mStack ,ret))
+                '()))
+           (('MState {[('later p) M t] . mStack} ret)
+            (list `(MState ,(append mStack `{[,p ,M ,t]}) ,ret)))
            (('MState {['_ 'Something t] . mStack} ret)
             `((MState ,mStack ,ret)))
            (('MState {[pvar 'Something t] . mStack} ret)
