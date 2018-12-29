@@ -58,6 +58,22 @@ For more examples, please see [test.scm](https://github.com/egison/egison-scheme
 
 - [Twin primes](https://github.com/egison/egison-scheme/blob/master/primes.scm)
 
+## Syntax
+
+```
+(match-all e M [p e])
+```
+
+```
+p = x        (pattern variable)
+ | ,e        (value pattern)
+ | (c p*)    (inductive pattern)
+ | (and p*)  (and-pattern)
+ | (or p*)   (or-pattern)
+ | (not p)   (not-pattern)
+ | (later p) (later pattern)
+```
+
 ## Features of this implementation
 
 We do not use the `eval` function in this implementation.
@@ -118,9 +134,10 @@ For example, `(join _ (cons x (join _ (cons ,x _))))` is transformed into `(join
 
 ## Future work
 
-### And-patterns, or-patterns, not-patterns, loop-patterns, ...
+### Implementation of loop patterns
 
-We can implement these patterns using the same method in the Egison interpreter.
+We can implement [loop patterns](https://arxiv.org/abs/1809.03252) using the same method in the Egison interpreter.
+It will extend the expressiveness of patterns very much.
 
 ### Implementation of Haskell and OCaml extensions
 
