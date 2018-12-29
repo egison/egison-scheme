@@ -35,7 +35,6 @@
 (define rewrite-pattern
   (lambda (p)
     (let {[ret (rewrite-pattern-helper p '())]}
-;      (car ret))))
       (car (rewrite-later-pattern-helper (car ret) (cdr ret))))))
 
 (define rewrite-pattern-helper

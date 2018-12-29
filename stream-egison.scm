@@ -24,12 +24,14 @@
 
 (define rewrite-pattern
   (lambda (p)
-    (car (rewrite-pattern-helper p '()))))
+    (let {[ret (rewrite-pattern-helper p '())]}
+      (car (rewrite-later-pattern-helper (car ret) (cdr ret))))))
 
 (define rewrite-pattern-helper
   (lambda (p xs)
         (match p
                (('unquote q) (cons (list 'val (list 'unquote `(lambda ,xs ,q))) xs))
+               (('later p) (cons `(later ,p) xs))
                ((c . args)
                 (let {[ret (rewrite-patterns-helper args xs)]}
                   (cons `(,c . ,(car ret)) (cdr ret))))
@@ -45,6 +47,30 @@
                    [p2 (car ret)]
                    [xs2 (cdr ret)]
                    [ret2 (rewrite-patterns-helper qs xs2)]
+                   [qs2 (car ret2)]
+                   [ys (cdr ret2)]}
+              (cons (cons p2 qs2)  ys))))))
+
+(define rewrite-later-pattern-helper
+  (lambda (p xs)
+    (match p
+           (('later p)
+            (let {[ret (rewrite-pattern-helper p xs)]}
+              (cons `(later ,(car ret)) (cdr ret))))
+           ((c . args)
+            (let {[ret (rewrite-later-patterns-helper args xs)]}
+              (cons `(,c . ,(car ret)) (cdr ret))))
+           (_ (cons p xs)))))
+
+(define rewrite-later-patterns-helper
+  (lambda (ps xs)
+    (match ps
+           (() (cons '() xs))
+           ((p . qs)
+            (let* {[ret (rewrite-later-pattern-helper p xs)]
+                   [p2 (car ret)]
+                   [xs2 (cdr ret)]
+                   [ret2 (rewrite-later-patterns-helper qs xs2)]
                    [qs2 (car ret2)]
                    [ys (cdr ret2)]}
               (cons (cons p2 qs2)  ys))))))
@@ -101,24 +127,24 @@
         (let {[mState (stream-car mStates)]}
           `(,(processMState mState) ,(stream-cdr mStates))))))
 
-(define processMStatesOld
-  (lambda (mStates)
-    (if (stream-null? mStates)
-        '()
-        (let {[mState (stream-car mStates)]}
-          (match mState
-                 (('MState '{} ret)
-                  (stream-cons ret (processMStates (stream-cdr mStates))))
-                 (_
-                  (processMStates (stream-append (processMState mState) (stream-cdr mStates))))
-                 )))))
-
 (define processMState
   (lambda (mState)
     (match mState
            (('MState {[('val f) M t] . mStack} ret)
             (let {[next-matomss (M `(val ,(apply f ret)) t)]}
               (stream-map (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss)))
+           (('MState {[('and . ps) M t] . mStack} ret)
+            (let {[next-matoms (map (lambda (p) `[,p ,M ,t]) ps)]}
+              (stream `(MState ,(append next-matoms mStack) ,ret))))
+           (('MState {[('or . ps) M t] . mStack} ret)
+            (let {[next-matomss (list->stream (map (lambda (p) `{[,p ,M ,t]}) ps))]}
+              (stream-map (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss)))
+           (('MState {[('not p) M t] . mStack} ret)
+            (if (stream-null? (processMStatesAll (list (stream `(MState {[,p ,M ,t]} ,ret)))))
+                (stream `(MState ,mStack ,ret))
+                stream-null))
+           (('MState {[('later p) M t] . mStack} ret)
+            (stream `(MState ,(append mStack `{[,p ,M ,t]}) ,ret)))
            (('MState {['_ 'Something t] . mStack} ret)
             (stream `(MState ,mStack ,ret)))
            (('MState {[pvar 'Something t] . mStack} ret)
