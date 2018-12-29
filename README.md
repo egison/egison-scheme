@@ -118,18 +118,6 @@ For example, `(join _ (cons x (join _ (cons ,x _))))` is transformed into `(join
 
 ## Future work
 
-### Pattern matching with infinitely many results
-
-If we implement the lazy match-all, we can support pattern matching with infinitely many results.
-
-```
-(take (match-all primes (List Integer)
-        [`(join _ (cons x (join _ (cons (val ,(lambda (p) (+ p 2))) _))))
-         `(,p ,(+ p 2))])
-      5)
-; ((3 5) (5 7) (11 13) (17 19) (29 31))
-```
-
 ### And-patterns, or-patterns, not-patterns, loop-patterns, ...
 
 We can implement these patterns using the same method in the Egison interpreter.
@@ -144,5 +132,5 @@ This is because the target type of each matching atom is different, therefore we
 
 ## References
 
-* Satoshi Egi, Yuichi Nishiwaki: [Non-linear Pattern Matching with Backtracking for Non-free Data Types](https://arxiv.org/abs/1808.10603) (APLAS 2018)
-* Satoshi Egi: [Loop Patterns: Extension of Kleene Star Operator for More Expressive Pattern Matching against Arbitrary Data Structures](https://arxiv.org/abs/1809.03252) (Scheme Workshop 2018)
+* Satoshi Egi, Yuichi Nishiwaki: [Non-linear Pattern Matching with Backtracking for Non-free Data Types](https://arxiv.org/abs/1808.10603) ([APLAS 2018](http://aplas2018.org/))
+* Satoshi Egi: [Loop Patterns: Extension of Kleene Star Operator for More Expressive Pattern Matching against Arbitrary Data Structures](https://arxiv.org/abs/1809.03252) ([Scheme Workshop 2018](https://www.brinckerhoff.org/scheme2018/))
