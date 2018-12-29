@@ -23,7 +23,7 @@ A non-linear pattern is effectively used for expressing the pattern.
 ```
 
 `match-all` returns a list of all the results.
-We provides two versions of `match-all` that returns a list and stream.
+We provides two types of `match-all` that returns a list and stream.
 `egison.scm` provides the list version.
 `stream-egison.scm` provides the stream version.
 `match-all` of `stream-egison.scm` supports pattern matching with infinitely many results as follows.
