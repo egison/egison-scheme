@@ -146,6 +146,7 @@ A not-pattern matches if the argument pattern does not match the target.
 
 ### Later patterns
 
+A later pattern is used to change the order of the pattern-matching process.
 Basically, our pattern-matching system processes patterns from left to right in order.
 However, we sometimes want this order, for example, to refer to the value bound to the right side of pattern variables.
 A later pattern can be used for such purpose.
