@@ -60,11 +60,12 @@ For more examples, please see [test.scm](https://github.com/egison/egison-scheme
 
 ## Syntax
 
-```
-(match-all e M [p e])
-```
+The following figure shows formal syntax of `match-all` and the patterns.
+`e`, `M`, `p`, and `x` are a metavariable that denotes an expression, matcher, pattern, and symbol, respectively.
 
 ```
+(match-all e M [p e])
+
 p = x        (pattern variable)
  | ,e        (value pattern)
  | (c p*)    (inductive pattern)
@@ -74,12 +75,87 @@ p = x        (pattern variable)
  | (later p) (later pattern)
 ```
 
-## Features of this implementation
+### Match-all
 
-We do not use the `eval` function in this implementation.
-It enables us to apply the method developed in this implementation to implementation of Haskell and OCaml extensions.
+`Match-all` is a syntax construct for pattern matching provided by our library.
+`Match-all` takes a target and match-clauses as the match expressions of the other functional programming languages.
+However, `match-all` has two characteristic parts: (i) its name is match-"all", and (ii) it takes an additional argument a <i>matcher</i> as its second argument.
 
-## Method for implementation
+First, `match-all` evaluates the body for <b>all</b> the pattern-matching results and returns a list of the evaluation results.
+This is the reason of the name "match-all".
+The following sample returns a list that contains one result `(1 (2 3))`.
+The reason is because `cons` for the list has only one decomposition.
+
+```
+(match-all '(1 2 3) (List Integer) [`(cons x xs) `(,x ,xs)])
+; ((1 (2 3)))
+```
+
+Second, a matcher is a special object in our pattern-matching system to specify the method for interpreting patterns.
+If we change the matcher, the pattern-matching result also changes.
+In the following sample, we changed the matcher from `(List Integer)` to `(Multiset Integer)`.
+As the result, the pattern-matching results changes from `((1 (2 3)))` to `((1 (2 3)) (2 (1 3)) (3 (1 2)))`.
+The reason is because `cons` for the multiset has multiple decompositions since the multiset ignores the order of the elements in a collection.
+
+```
+(match-all '(1 2 3) (Multiset Integer) [`(cons x xs) `(,x ,xs)])
+; ((1 (2 3)) (2 (1 3)) (3 (1 2)))
+```
+
+A matcher is defined in Scheme in our library.
+Users can define their own matchers in Scheme.
+
+### Value patterns
+
+Our pattern-matching system supports <i>non-linear patterns</i>.
+A non-linear pattern is a pattern that allows multiple occurrences of identical pattern variables in a pattern.
+Non-linear pattern is especially useful for pattern matching against non-free data types.
+For example, we can write a pattern that matches if the target collection contains a pair of identical elements.
+
+A pattern that is prepend with `,` is called a <i>value-pattern</i>.
+Value patterns match the target if the target is equal to the content of the value pattern.
+The expression after `,` is evaluated referring to the value bound to the pattern variables that appear left-side of the patterns.
+
+```
+(match-all '(1 2 5 9 4) (Multiset Integer) [`(cons x (cons ,(+ x 1) _)) x])
+; (1 4)
+```
+
+### Or-patterns, and-patterns, and not-patterns
+
+An or-pattern matches if one of the argument patterns matches the target.
+
+```
+(match-all '(1 2 3) (List Integer) [`(cons (or ,1 ,10) _) "OK"])
+; ("OK")
+```
+
+An and-pattern matches if all the argument patterns match the target.
+
+```
+(match-all '(1 2 3) (List Integer) [`(cons (and ,1 x) _) x])
+; (1)
+```
+
+A not-pattern matches if the argument pattern does not match the target.
+
+```
+(match-all '(1 2 3) (List Integer) [`(cons x (not (cons ,x _))) x])
+; (1)
+```
+
+### Later patterns
+
+Basically, our pattern-matching system processes patterns from left to right in order.
+However, we sometimes want this order, for example, to refer to the value bound to the right side of pattern variables.
+A later pattern can be used for such purpose.
+
+```
+(match-all '(1 1 2 3) (List Integer) [`(cons (later ,x) (cons x _)) x])
+; (1)
+```
+
+## Implemented method
 
 ### Matchers are defined as a function that takes a pattern and target, and returns next matching atoms.
 
@@ -113,11 +189,11 @@ Match-all is transformed into an application of map whose arguments uses `extrac
 It allows us to implement `match-all` without using `eval`.
 
 ```
-(match-all t m [p e])
+(match-all t M [p e])
 ```
 ->
 ```
-`(map (lambda ,(extract-pattern-variables p) ,e) ,(pattern-match p m t))
+`(map (lambda ,(extract-pattern-variables p) ,e) ,(pattern-match p M t))
 ```
 
 `extract-pattern-variables` takes a pattern and returns a list of pattern variables that appear in the pattern.
@@ -142,10 +218,8 @@ It will extend the expressiveness of patterns very much.
 ### Implementation of Haskell and OCaml extensions
 
 We can apply the method for implementing this macro for the other languages.
-However, additional work is required for implementing this pattern-matching facility for languages with a static type system such as Haskell and OCaml.
-For these languages, the translated programs need to have types.
-The most difficult part for making being typed is a stack of matching atoms.
-This is because the target type of each matching atom is different, therefore we cannot type a stack of matching atoms as a list of matching atoms simply.
+We have avoided to use the `eval` function in this implementation for that purpose.
+Currently, we are working to implement a Haskell extension for this pattern-matching facility.
 
 ## References
 
