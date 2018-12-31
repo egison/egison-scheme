@@ -16,7 +16,7 @@
   (if (eq? clauses '())
       '()
       (let* {[clause (car clauses)]
-             [p (rewrite-pattern (car clause))]
+             [p (rewrite-pattern (list 'quasiquote (car clause)))]
              [e (cadr clause)]}
         `(stream-append (stream-map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret))
                                     (gen-match-results ,p ,M ,t))

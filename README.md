@@ -18,7 +18,7 @@ A non-linear pattern is effectively used for expressing the pattern.
 ```
 (load "./egison.scm")
 
-(match-all '(1 2 5 9 4) (Multiset Integer) [`(cons x (cons ,(+ x 1) _)) x])
+(match-all '(1 2 5 9 4) (Multiset Integer) [(cons x (cons ,(+ x 1) _)) x])
 ; (1 4)
 ```
 
@@ -39,7 +39,7 @@ We provides two types of `match-all` that returns a list and stream.
 (stream->list
  (stream-take
   (match-all stream-primes (List Integer)
-             [`(join _ (cons p (cons ,(+ p 2) _)))
+             [(join _ (cons p (cons ,(+ p 2) _)))
               `(,p ,(+ p 2))])
   10))
 ; ((3 5) (5 7) (11 13) (17 19) (29 31) (41 43) (59 61) (71 73) (101 103) (107 109))
@@ -87,7 +87,7 @@ The following sample returns a list that contains one result `(1 (2 3))`.
 The reason is because `cons` for the list has only one decomposition.
 
 ```
-(match-all '(1 2 3) (List Integer) [`(cons x xs) `(,x ,xs)])
+(match-all '(1 2 3) (List Integer) [(cons x xs) `(,x ,xs)])
 ; ((1 (2 3)))
 ```
 
@@ -98,7 +98,7 @@ As the result, the pattern-matching results changes from `((1 (2 3)))` to `((1 (
 The reason is because `cons` for the multiset has multiple decompositions since the multiset ignores the order of the elements in a collection.
 
 ```
-(match-all '(1 2 3) (Multiset Integer) [`(cons x xs) `(,x ,xs)])
+(match-all '(1 2 3) (Multiset Integer) [(cons x xs) `(,x ,xs)])
 ; ((1 (2 3)) (2 (1 3)) (3 (1 2)))
 ```
 
@@ -117,7 +117,7 @@ Value patterns match the target if the target is equal to the content of the val
 The expression after `,` is evaluated referring to the value bound to the pattern variables that appear left-side of the patterns.
 
 ```
-(match-all '(1 2 5 9 4) (Multiset Integer) [`(cons x (cons ,(+ x 1) _)) x])
+(match-all '(1 2 5 9 4) (Multiset Integer) [(cons x (cons ,(+ x 1) _)) x])
 ; (1 4)
 ```
 
@@ -126,21 +126,21 @@ The expression after `,` is evaluated referring to the value bound to the patter
 An or-pattern matches if one of the argument patterns matches the target.
 
 ```
-(match-all '(1 2 3) (List Integer) [`(cons (or ,1 ,10) _) "OK"])
+(match-all '(1 2 3) (List Integer) [(cons (or ,1 ,10) _) "OK"])
 ; ("OK")
 ```
 
 An and-pattern matches if all the argument patterns match the target.
 
 ```
-(match-all '(1 2 3) (List Integer) [`(cons (and ,1 x) _) x])
+(match-all '(1 2 3) (List Integer) [(cons (and ,1 x) _) x])
 ; (1)
 ```
 
 A not-pattern matches if the argument pattern does not match the target.
 
 ```
-(match-all '(1 2 3) (List Integer) [`(cons x (not (cons ,x _))) x])
+(match-all '(1 2 3) (List Integer) [(cons x (not (cons ,x _))) x])
 ; (1)
 ```
 
@@ -152,7 +152,7 @@ However, we sometimes want this order, for example, to refer to the value bound 
 A later pattern can be used for such purpose.
 
 ```
-(match-all '(1 1 2 3) (List Integer) [`(cons (later ,x) (cons x _)) x])
+(match-all '(1 1 2 3) (List Integer) [(cons (later ,x) (cons x _)) x])
 ; (1)
 ```
 
@@ -171,7 +171,7 @@ For example, `Multiset` is defined as follows.
         (('cons px py)
          (map (lambda (xy) `((,px ,M ,(car xy)) (,py ,(Multiset M) ,(cadr xy))))
               (match-all t (List M)
-                ['(join hs (cons x ts)) `(,x ,(append hs ts))])))
+                [(join hs (cons x ts)) `(,x ,(append hs ts))])))
         (pvar
          `(((,pvar Something ,t))))
         ))))

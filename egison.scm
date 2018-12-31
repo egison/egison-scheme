@@ -16,7 +16,7 @@
   (if (eq? clauses '())
       '()
       (let* {[clause (car clauses)]
-             [p (rewrite-pattern (car clause))]
+             [p (rewrite-pattern (list 'quasiquote (car clause)))]
              [e (cadr clause)]}
         `(append (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret)) (gen-match-results ,p ,M ,t))
                  (match-all ,t ,M . ,(cdr clauses))))))
@@ -25,7 +25,7 @@
   (if (eq? clauses '())
       'not-matched
       (let* {[clause (car clauses)]
-             [p (rewrite-pattern (car clause))]
+             [p (rewrite-pattern (list 'quasiquote (car clause)))]
              [e (cadr clause)]}
         `(let {[rets (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret)) (gen-match-results ,p ,M ,t))]}
            (if (eq? rets  '())
@@ -190,7 +190,7 @@
              (('cons px py)
               (map (lambda (xy) `((,px ,M ,(car xy)) (,py ,(Multiset M) ,(cadr xy))))
                    (match-all t (List M)
-                              ['(join hs (cons x ts)) `(,x ,(append hs ts))])))
+                              [(join hs (cons x ts)) `(,x ,(append hs ts))])))
              (pvar
               `(((,pvar Something ,t))))
              ))))
