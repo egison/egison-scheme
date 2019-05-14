@@ -41,6 +41,9 @@
   (lambda (p xs)
         (match p
                (('unquote q) (cons (list 'val (list 'unquote `(lambda ,xs ,q))) xs))
+               (('quote (? list? ps))
+                (let {[ret (rewrite-patterns-helper ps xs)]}
+                  (cons `(quote ,(car ret)) (cdr ret))))
                (('later p) (cons `(later ,p) xs))
                ((c . args)
                 (let {[ret (rewrite-patterns-helper args xs)]}
@@ -89,8 +92,11 @@
   (lambda (p)
     (match p
            (('val _) '())
+           (('quote args)
+            (concatenate (map extract-pattern-variables args)))
            ((c . args)
             (concatenate (map extract-pattern-variables args)))
+           (() '())
            ('_ '())
            (pvar `(,pvar))
            )))
@@ -111,6 +117,8 @@
 (define processMState
   (lambda (mState)
     (match mState
+           (('MState {[('quote (? list? ps)) (? list? Ms) ts] . mStack} ret)
+            (list `(MState ,(append (zip3 ps Ms ts) mStack) ,ret)))
            (('MState {[('val f) M t] . mStack} ret)
             (let {[next-matomss (M `(val ,(apply f ret)) t)]}
               (map (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss)))
@@ -187,6 +195,7 @@
   (lambda (M)
     (lambda (p t)
       (match p
+             (() (if (eq? t '()) '{[]} '{}))
              (('cons px py)
               (map (lambda (xy) `((,px ,M ,(car xy)) (,py ,(Multiset M) ,(cadr xy))))
                    (match-all t (List M)
@@ -194,3 +203,15 @@
              (pvar
               `(((,pvar Something ,t))))
              ))))
+
+;;
+;; Utility functions
+;;
+
+(define zip3
+  (lambda [xs ys zs]
+    (match `(,xs ,ys ,zs)
+           ((() _ _) '())
+           ((_ () _) '())
+           ((_ _ ()) '())
+           (((x . xs) (y . ys) (z . zs)) (cons `(,x ,y ,z) (zip3 xs ys zs))))))
