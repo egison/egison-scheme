@@ -40,11 +40,15 @@
     (match-first `[,vars ,cnf] `[,(Multiset Integer) ,(Multiset (Multiset Integer))]
                  ['[_ ()] #t]
                  ['[_ (cons () _)] #f]
-                 ['[_ (cons (cons l ()) _)] (dp (delete (abs l) vars) (assign-true l cnf))]
-                 ['[(cons v vs) (not (cons (cons ,(neg v) _) _))] (dp vs (assign-true v cnf))]
-                 ['[(cons v vs) (not (cons (cons ,v _) _))] (dp vs (assign-true (neg v) cnf))]
-                 ['[(cons v vs) _] (dp vs (append (resolve-on v cnf) (delete-clauses-with v (delete-clauses-with (neg v) cnf))))]
-                 )))
+                 ['[_ (cons (cons l ()) _)]
+                  (dp (delete (abs l) vars) (assign-true l cnf))]
+                 ['[(cons v vs) (not (cons (cons ,(neg v) _) _))]
+                  (dp vs (assign-true v cnf))]
+                 ['[(cons v vs) (not (cons (cons ,v _) _))]
+                  (dp vs (assign-true (neg v) cnf))]
+                 ['[(cons v vs) _]
+                  (dp vs (append (resolve-on v cnf)
+                                 (delete-clauses-with v (delete-clauses-with (neg v) cnf))))])))
 
 (dp '{} '{}) ; #t
 (dp '{} '{{}}) ; #f
