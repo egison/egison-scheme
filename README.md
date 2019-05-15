@@ -51,8 +51,9 @@ For more examples, please see [test.scm](https://github.com/egison/egison-scheme
 
 ### Strict pattern matching
 
-- [The basic list functions defined in pattern-matching-oriented programming style](https://github.com/egison/egison-scheme/blob/master/pattern-matching-oriented-programming-style.scm)
+- [The basic list processing functions defined in pattern-matching-oriented programming style](https://github.com/egison/egison-scheme/blob/master/pattern-matching-oriented-programming-style.scm)
 - [Poker hands](https://github.com/egison/egison-scheme/blob/master/poker.scm)
+- [SAT solver (Davis-Putnam Algorithm)](https://github.com/egison/egison-scheme/blob/master/dp.scm)
 
 ### Lazy pattern matching
 
