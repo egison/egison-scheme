@@ -112,6 +112,7 @@
             (cons ret (processMStates rs)))
            ((mState . rs)
             (processMStates (append (processMState mState) rs)))
+;            (append (processMStates (processMState mState)) (processMStates rs))) ; slower than the above line
            )))
 
 (define processMState
@@ -162,26 +163,30 @@
   (lambda (M)
     (lambda (p t)
       (match p
-             (('cons px py)
-              (match t
-                     (() '())
-                     ((x . xs)
-                      `(((,px ,M ,x) (,py ,(List M) ,xs)))
-                      )))
-             (('join px py)
-              (map (lambda (xy) `((,px ,(List M) ,(car xy)) (,py ,(List M) ,(cadr xy))))
-                    (unjoin t)))
-             (('val x)
-              (if (eq? x t)
-                  '(())
-                  '()))
-             (pvar
-              `(((,pvar Something ,t))))
-             ))))
+        (('nil) (if (eq? t '()) '{{}} '{}))
+        (('cons px py)
+         (match t
+                (() '{})
+                ((x . xs)
+                 `{{[,px ,M ,x] [,py ,(List M) ,xs]}})))
+        (('join '_ ('cons px py))
+         (map (lambda (xy) `[(,px ,M ,(car xy)) (,py ,(List M) ,(cdr xy))])
+               (tails t)))
+        (('join px py)
+         (map (lambda (xy) `[(,px ,(List M) ,(car xy)) (,py ,(List M) ,(cadr xy))])
+              (unjoin t)))
+        (('val x) (if (eq? x t) '{{}} '{}))
+        (pvar `{{[,pvar Something ,t]}})))))
+
+(define tails
+  (lambda (xs)
+    (if (eq? xs '())
+        '()
+        (cons xs (tails (cdr xs))))))
 
 (define unjoin
   (lambda (xs)
-    (unjoin-helper '() xs)))
+    (unjoin-helper '((() ())) xs)))
 
 (define unjoin-helper
   (lambda (ret xs)
@@ -195,14 +200,17 @@
   (lambda (M)
     (lambda (p t)
       (match p
-             (() (if (eq? t '()) '{[]} '{}))
-             (('cons px py)
-              (map (lambda (xy) `((,px ,M ,(car xy)) (,py ,(Multiset M) ,(cadr xy))))
-                   (match-all t (List M)
-                              [(join hs (cons x ts)) `(,x ,(append hs ts))])))
-             (pvar
-              `(((,pvar Something ,t))))
-             ))))
+        (('nil) (if (eq? t '()) '{{}} '{}))
+        (('cons px py)
+         (map (lambda (xy) `{[,px ,M ,(car xy)] [,py ,(Multiset M) ,(cadr xy)]})
+              (match-all t (List M)
+                [(join hs (cons x ts)) `(,x ,(append hs ts))])))
+        (('val v)
+         (match-first `(,v ,t) `(,(List M) ,(Multiset M))
+           ('((nil) (nil)) '{{}})
+           ('((cons x xs) (cons ,x ,xs)) '{{}})
+           ('(_ _) '{})))
+        (pvar `{{[,pvar Something ,t]}})))))
 
 ;;
 ;; Utility functions

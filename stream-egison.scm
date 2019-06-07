@@ -10,7 +10,7 @@
 
 (use util.match)
 (use srfi-1)
-(use util.stream)
+(use util.stream) ; srfi-40
 
 (define-macro (match-all t M . clauses)
   (if (eq? clauses '())
