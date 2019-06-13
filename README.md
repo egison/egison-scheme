@@ -5,6 +5,8 @@ This pattern-matching facility is originally proposed in [this paper](https://ar
 
 We have tested this library on [Gauche](http://practical-scheme.net/gauche/) 0.9.6.
 
+Draft paper for this Scheme library: [github.com/egisatoshi/macro-paper](https://github.com/egisatoshi/macro-paper/blob/master/main.pdf)
+
 ## Usage
 
 Non-free data types are data types whose data have no standard forms.

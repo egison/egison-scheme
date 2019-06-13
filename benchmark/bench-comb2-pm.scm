@@ -5,7 +5,8 @@
     (match-all xs (List Something)
                ((join _ (cons x (join _ (cons y _)))) `(,x ,y)))))
 
-(print (length (pm-comb2 (iota 800 1))))
+(print (pm-comb2 (iota 5 1)))
+;(print (length (pm-comb2 (iota 800 1))))
 
 ; 100: 0.181
 ; 200: 0.829

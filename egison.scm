@@ -169,11 +169,11 @@
                 (() '{})
                 ((x . xs)
                  `{{[,px ,M ,x] [,py ,(List M) ,xs]}})))
-        (('join '_ ('cons px py))
-         (map (lambda (xy) `[(,px ,M ,(car xy)) (,py ,(List M) ,(cdr xy))])
+        (('join '_ py)
+         (map (lambda (y) `{[,py ,(List M) ,y]})
                (tails t)))
         (('join px py)
-         (map (lambda (xy) `[(,px ,(List M) ,(car xy)) (,py ,(List M) ,(cadr xy))])
+         (map (lambda (xy) `{[,px ,(List M) ,(car xy)] [,py ,(List M) ,(cadr xy)]})
               (unjoin t)))
         (('val x) (if (eq? x t) '{{}} '{}))
         (pvar `{{[,pvar Something ,t]}})))))
@@ -181,7 +181,7 @@
 (define tails
   (lambda (xs)
     (if (eq? xs '())
-        '()
+        '(())
         (cons xs (tails (cdr xs))))))
 
 (define unjoin
@@ -201,6 +201,7 @@
     (lambda (p t)
       (match p
         (('nil) (if (eq? t '()) '{{}} '{}))
+;        (('cons px '_) (map (lambda (x) `{[,px ,M ,x]}) t))
         (('cons px py)
          (map (lambda (xy) `{[,px ,M ,(car xy)] [,py ,(Multiset M) ,(cadr xy)]})
               (match-all t (List M)
