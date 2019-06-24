@@ -38,9 +38,9 @@
 (define dp
   (lambda [vars cnf]
     (match-first `[,vars ,cnf] `[,(Multiset Integer) ,(Multiset (Multiset Integer))]
-                 ['[_ ()] #t]
-                 ['[_ (cons () _)] #f]
-                 ['[_ (cons (cons l ()) _)]
+                 ['[_ (nil)] #t]
+                 ['[_ (cons (nil) _)] #f]
+                 ['[_ (cons (cons l (nil)) _)]
                   (dp (delete (abs l) vars) (assign-true l cnf))]
                  ['[(cons v vs) (not (cons (cons ,(neg v) _) _))]
                   (dp vs (assign-true v cnf))]

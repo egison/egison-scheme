@@ -37,7 +37,7 @@
                               (cons (card ,s ,(+ n 2))
                                     (cons (card ,s ,(+ n 3))
                                           (cons (card ,s ,(+ n 4))
-                                                ())))))
+                                                _)))))
                   "Straight flush"]
                  [(cons (card _ n)
                         (cons (card _ ,n)
