@@ -419,5 +419,5 @@
    {-3 -40 8}
    {-23 -31 38}})
 
-;(print (dpll (iota 20 1) problem20))
-(print (dpll (iota 50 1) problem50))
+(print (dpll (iota 20 1) problem20)) ; 1.218
+;(print (dpll (iota 50 1) problem50)) ; 1:29.14

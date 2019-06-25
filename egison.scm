@@ -217,7 +217,7 @@
     (lambda (p t)
       (match p
         (('nil) (if (eq? t '()) '{{}} '{}))
-;        (('cons px '_) (map (lambda (x) `{[,px ,M ,x]}) t))
+        (('cons px '_) (map (lambda (x) `{[,px ,M ,x]}) t))
         (('cons px py)
          (map (lambda (xy) `{[,px ,M ,(car xy)] [,py ,(Multiset M) ,(cadr xy)]})
               (match-all t (List M)
