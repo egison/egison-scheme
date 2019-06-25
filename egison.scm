@@ -27,7 +27,7 @@
       (let* {[clause (car clauses)]
              [p (rewrite-pattern (list 'quasiquote (car clause)))]
              [e (cadr clause)]}
-        `(let {[rets (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret)) (gen-match-results ,p ,M ,t))]}
+        `(let {[rets (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret)) (gen-match-results1 ,p ,M ,t))]}
            (if (eq? rets  '())
                (match-first ,t ,M . ,(cdr clauses))
                (car rets))))))
@@ -104,6 +104,9 @@
 (define-macro (gen-match-results p M t)
   `(processMStates (list (list 'MState (list (list ,p ,M ,t) ) {}))))
 
+(define-macro (gen-match-results1 p M t)
+  `(processMStates1 (list (list 'MState (list (list ,p ,M ,t) ) {}))))
+
 (define processMStates
   (lambda (mStates)
     (match mStates
@@ -112,7 +115,16 @@
             (cons ret (processMStates rs)))
            ((mState . rs)
             (processMStates (append (processMState mState) rs)))
-;            (append (processMStates (processMState mState)) (processMStates rs))) ; slower than the above line
+           )))
+
+(define processMStates1
+  (lambda (mStates)
+    (match mStates
+           (() '())
+           ((('MState '{} ret) . rs)
+            `(,ret))
+           ((mState . rs)
+            (processMStates1 (append (processMState mState) rs)))
            )))
 
 (define processMState
