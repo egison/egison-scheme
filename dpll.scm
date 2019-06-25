@@ -51,6 +51,8 @@
     (match-first `(,vars ,cnf) `(,(Multiset Integer) ,(Multiset (Multiset Integer)))
                  ['[_ (cons (cons l (nil)) _)]
                   (unit-propagate3 (delete (abs l) vars) (assign-true l cnf) (cons `(Deduced ,l) trail))]
+                 ['[(cons v vs) (not (cons (cons (or ,v ,(neg v)) _) _))]
+                  (unit-propagate3 vs cnf trail)]
                  ['[(cons v vs) (not (cons (cons ,(neg v) _) _))]
                   (unit-propagate3 vs (assign-true v cnf) (cons `(Deduced ,v) trail))]
                  ['[(cons v vs) (not (cons (cons ,v _) _))]
@@ -72,11 +74,11 @@
   (lambda [vars cnf trail]
 ;    (print "before")
 ;    (print `(,vars ,cnf ,trail))
-;    (print trail)
+    (print trail)
     (let-values {[(vars2 cnf2 trail2) (apply values (unit-propagate vars cnf trail))]}
 ;      (print `(,vars2 ,cnf2 ,trail2))
 ;      (print "after")
-      (print trail2)
+;      (print trail2)
 ;      (print vars2)
 ;      (print cnf2)
       (match-first `[,vars2 ,cnf2] `[,(Multiset Integer) ,(Multiset (Multiset Integer))]
@@ -86,23 +88,23 @@
                                  [(join _ (cons (guessed l) trail2))
                                   (dpll2 vars cnf (cons `(Deduced ,(neg l)) trail2))]
                                  [_ #f])]
-                   ['[(cons v vs) _]
-                    (dpll2 vars cnf (cons `(Guessed ,v) trail2))]))))
+                   ['[_ _]
+                    (dpll2 vars cnf (cons `(Guessed ,(car vars2)) trail2))]))))
 
 (define dpll
   (lambda [vars cnf]
     (dpll2 vars cnf '{})))
 
-(print (dpll '{} '{})) ; #t
-(print (dpll '{} '{{}})) ; #f
-(print (dpll '{1} '{{1}})) ; #t
-(print (dpll '{1} '{{1} {-1}})) ; #f
-(print (dpll '{1 3} '{{-1 3} {1 -3}})) ; #t
-(print (dpll '{1 2 3} '{{1 2} {-1 3} {1 -3}})) ; #t
-(print (dpll '{1 2} '{{1 2} {-1 -2} {1 -2}})) ; #t
-(print (dpll '{1 2} '{{1 2} {-1 -2} {1 -2} {-1 2}})) ; #f
-(print (dpll '{1 2 3 4 5} '{{-1 -2 3} {-1 -2 -3} {1 2 3 4} {-4 -2 3} {5 1 2 -3} {-3 1 -5} {1 -2 3 4} {1 -2 -3 5}})) ; #t
-(print (dpll '{1 2} '{{-1 -2} {1}})) ; #t
+;(print (dpll '{} '{})) ; #t
+;(print (dpll '{} '{{}})) ; #f
+;(print (dpll '{1} '{{1}})) ; #t
+;(print (dpll '{1} '{{1} {-1}})) ; #f
+;(print (dpll '{1 3} '{{-1 3} {1 -3}})) ; #t
+;(print (dpll '{1 2 3} '{{1 2} {-1 3} {1 -3}})) ; #t
+;(print (dpll '{1 2} '{{1 2} {-1 -2} {1 -2}})) ; #t
+;(print (dpll '{1 2} '{{1 2} {-1 -2} {1 -2} {-1 2}})) ; #f
+;(print (dpll '{1 2 3 4 5} '{{-1 -2 3} {-1 -2 -3} {1 2 3 4} {-4 -2 3} {5 1 2 -3} {-3 1 -5} {1 -2 3 4} {1 -2 -3 5}})) ; #t
+;(print (dpll '{1 2} '{{-1 -2} {1}})) ; #t
 
 (define problem20
  '{{ 4 -18 19}
@@ -417,5 +419,5 @@
    {-3 -40 8}
    {-23 -31 38}})
 
-(print (dpll (iota 20 1) problem20))
-;(print (dpll (iota 50 1) problem50))
+;(print (dpll (iota 20 1) problem20))
+(print (dpll (iota 50 1) problem50))

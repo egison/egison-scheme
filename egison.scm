@@ -27,10 +27,14 @@
       (let* {[clause (car clauses)]
              [p (rewrite-pattern (list 'quasiquote (car clause)))]
              [e (cadr clause)]}
-        `(let {[rets (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret)) (gen-match-results1 ,p ,M ,t))]}
-           (if (eq? rets  '())
+        `(let {[rets (gen-match-results1 ,p ,M ,t)]}
+           (if (eq? rets '())
                (match-first ,t ,M . ,(cdr clauses))
-               (car rets))))))
+               (apply (lambda ,(extract-pattern-variables p) ,e) (car rets)))))))
+;        `(let {[rets (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret)) (gen-match-results1 ,p ,M ,t))]}
+;           (if (eq? rets  '())
+;               (match-first ,t ,M . ,(cdr clauses))
+;               (car rets))))))
 
 (define rewrite-pattern
   (lambda (p)
