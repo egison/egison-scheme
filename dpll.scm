@@ -3,6 +3,32 @@
 
 (load "./egison.scm")
 
+;; buggy for value pattern
+(define Literal
+  (lambda (p t)
+    (match p
+      [('whichever pi) `{{[,pi ,Integer ,t]}}]
+      [_ `{{[,p ,Integer ,t]}}])))
+
+;; buggy for value pattern
+(define Assignment
+  (lambda (p t)
+    (match p
+      [('deduced pi)
+       (match t
+         [('Deduced i) `{{[,pi ,Integer ,i]}}]
+         [_ `{}])]
+      [('guessed pi)
+       (match t
+         [('Guessed i) `{{[,pi ,Integer ,i]}}]
+         [_ `{}])]
+      [('either pi)
+       (match t
+         [('Deduced i) `{{[,pi ,Integer ,i]}}]
+         [('Guessed i) `{{[,pi ,Integer ,i]}}]
+         [_ `{}])]
+      [_ `{{[,p ,Integer ,t]}}])))
+
 (define neg (lambda (x) (* -1 x)))
 
 (define delete-literal
@@ -20,46 +46,55 @@
   (lambda [l cnf]
     (delete-literal (neg l) (delete-clauses-with l cnf))))
 
-(define tautology?
-  (lambda [c]
-    (match-first c (Multiset Integer)
-      [(cons l (cons ,(neg l) _)) #t]
-      [_ #f])))
-
-(define resolve-on
-  (lambda [v cnf]
-    (filter (lambda [c] (not (tautology? c)))
-            (match-all cnf (Multiset (Multiset Integer))
-              [(cons (cons ,v xs)
-                (cons (cons ,(neg v) ys)
-                  _))
-               (delete-duplicates (append xs ys))]))))
-
-(define dp
-  (lambda [vars cnf]
-    (match-first `[,vars ,cnf] `[,(Multiset Integer) ,(Multiset (Multiset Integer))]
-                 ['[_ (nil)] #t]
-                 ['[_ (cons (nil) _)] #f]
+(define unit-propagate3
+  (lambda [vars cnf trail]
+    (match-first `(,vars ,cnf) `(,(Multiset Integer) ,(Multiset (Multiset Integer)))
                  ['[_ (cons (cons l (nil)) _)]
-                  (dp (delete (abs l) vars) (assign-true l cnf))]
+                  (unit-propagate3 (delete (abs l) vars) (assign-true l cnf) (cons `(Deduced ,l) trail))]
                  ['[(cons v vs) (not (cons (cons ,(neg v) _) _))]
-                  (dp vs (assign-true v cnf))]
+                  (unit-propagate3 vs (assign-true v cnf) (cons `(Deduced ,v) trail))]
                  ['[(cons v vs) (not (cons (cons ,v _) _))]
-                  (dp vs (assign-true (neg v) cnf))]
-                 ['[(cons v vs) _]
-                  (dp vs (append (resolve-on v cnf)
-                                 (delete-clauses-with v (delete-clauses-with (neg v) cnf))))])))
+                  (unit-propagate3 vs (assign-true (neg v) cnf) (cons `(Deduced ,(neg v)) trail))]
+                 ['[_ _] `(,vars ,cnf ,trail)]
+                 )))
 
-(dp '{} '{}) ; #t
-(dp '{} '{{}}) ; #f
-(dp '{1} '{{1}}) ; #t
-(dp '{1} '{{1} {-1}}) ; #f
-(dp '{1 3} '{{-1 3} {1 -3}}) ; #t
-(dp '{1 2 3} '{{1 2} {-1 3} {1 -3}}) ; #t
-(dp '{1 2} '{{1 2} {-1 -2} {1 -2}}) ; #t
-(dp '{1 2} '{{1 2} {-1 -2} {1 -2} {-1 2}}) ; #f
-(dp '{1 2 3 4 5} '{{-1 -2 3} {-1 -2 -3} {1 2 3 4} {-4 -2 3} {5 1 2 -3} {-3 1 -5} {1 -2 3 4} {1 -2 -3 5}}) ; #t
-(print (dp '{1 2} '{{-1 -2} {1}})) ; #t
+(define unit-propagate2
+  (lambda [vars cnf trail otrail]
+    (match-first trail (List Assignment)
+                 [(cons (either l) trail2) (unit-propagate2 (delete (abs l) vars) (assign-true l cnf) trail2 otrail)]
+                 [_ (unit-propagate3 vars cnf otrail)])))
+
+(define unit-propagate
+  (lambda [vars cnf trail]
+    (unit-propagate2 vars cnf trail trail)))
+
+(define dpll2
+  (lambda [vars cnf trail]
+    (let-values {[(vars2 cnf2 trail2) (apply values (unit-propagate vars cnf trail))]}
+      (match-first `[,vars2 ,cnf2] `[,(Multiset Integer) ,(Multiset (Multiset Integer))]
+                   ['[_ (nil)] #t]
+                   ['[_ (cons (nil) _)]
+                    (match-first trail (List Assignment)
+                                 [(join _ (cons (guessed l) trail2))
+                                  (dpll2 vars cnf (cons `(Deduced ,l) trail2))]
+                                 [_ #f])]
+                   ['[(cons v vs) _]
+                    (dpll2 vs cnf (cons `(Guessed ,(neg v)) trail))]))))
+
+(define dpll
+  (lambda [vars cnf]
+    (dpll2 vars cnf '{})))
+
+(print (dpll '{} '{})) ; #t
+(print (dpll '{} '{{}})) ; #f
+(print (dpll '{1} '{{1}})) ; #t
+(print (dpll '{1} '{{1} {-1}})) ; #f
+(print (dpll '{1 3} '{{-1 3} {1 -3}})) ; #t
+(print (dpll '{1 2 3} '{{1 2} {-1 3} {1 -3}})) ; #t
+(print (dpll '{1 2} '{{1 2} {-1 -2} {1 -2}})) ; #f? bug
+(print (dpll '{1 2} '{{1 2} {-1 -2} {1 -2} {-1 2}})) ; #f
+(print (dpll '{1 2 3 4 5} '{{-1 -2 3} {-1 -2 -3} {1 2 3 4} {-4 -2 3} {5 1 2 -3} {-3 1 -5} {1 -2 3 4} {1 -2 -3 5}})) ; #t
+(print (dpll '{1 2} '{{-1 -2} {1}})) ; #t
 
 (define problem
  '{{ 18 -8 29}
@@ -281,4 +316,4 @@
    {-3 -40 8}
    {-23 -31 38}})
 
-(print (dp (iota 50 1) problem))
+(print (dpll (iota 50 1) problem))

@@ -23,7 +23,7 @@
 
 (define-macro (match-first t M . clauses)
   (if (eq? clauses '())
-      'not-matched
+      'exhausted-match-clauses
       (let* {[clause (car clauses)]
              [p (rewrite-pattern (list 'quasiquote (car clause)))]
              [e (cadr clause)]}
