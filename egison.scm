@@ -17,8 +17,8 @@
       '()
       (let* {[clause (car clauses)]
              [p (rewrite-pattern (list 'quasiquote (car clause)))]
-             [e (cadr clause)]}
-        `(append (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret)) (gen-match-results ,p ,M ,t))
+             [es (cdr clause)]}
+        `(append (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,(cons 'begin es)) ret)) (gen-match-results ,p ,M ,t))
                  (match-all ,t ,M . ,(cdr clauses))))))
 
 (define-macro (match-first t M . clauses)
@@ -26,12 +26,12 @@
       'exhausted-match-clauses
       (let* {[clause (car clauses)]
              [p (rewrite-pattern (list 'quasiquote (car clause)))]
-             [e (cadr clause)]}
+             [es (cdr clause)]}
         `(let {[rets (gen-match-results1 ,p ,M ,t)]}
            (if (eq? rets '())
                (match-first ,t ,M . ,(cdr clauses))
-               (apply (lambda ,(extract-pattern-variables p) ,e) (car rets)))))))
-;        `(let {[rets (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,e) ret)) (gen-match-results1 ,p ,M ,t))]}
+               (apply (lambda ,(extract-pattern-variables p) ,(cons 'begin es)) (car rets)))))))
+;        `(let {[rets (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,(cons 'begin es)) ret)) (gen-match-results1 ,p ,M ,t))]}
 ;           (if (eq? rets  '())
 ;               (match-first ,t ,M . ,(cdr clauses))
 ;               (car rets))))))

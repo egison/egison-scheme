@@ -40,6 +40,10 @@
 
 ;(to-cnf '{{1 2} {-1 3} {1 -3}})
 
+(define from-cnf
+  (lambda [cnf]
+    (map (lambda [c] (car c)) cnf)))
+
 (define neg (lambda (x) (* -1 x)))
 
 (define learn
@@ -139,10 +143,12 @@
                                   ; with backjumping by here
                                   ]
                                  [_ #f])]
-                   ['[(cons v _) (not '[(cons (cons ,(neg v) _) _) (cons (cons ,(neg v) rs) _)])]
-                    (cdcl2 vars cnf (cons `(Decuded ,v ,rs) trail2))]
-                   ['[(cons v _) (not '[(cons (cons ,v _) _) (cons (cons ,v rs) _)])]
-                    (cdcl2 vars cnf (cons `(Deduced ,(neg v) ,rs) trail2))]
+                   ; pure literal rule (buggy)
+;                   ['[(cons v _) (not '[(cons (cons ,(neg v) _) _) (cons (cons ,(neg v) rs) _)])]
+;                    (cdcl2 vars cnf (cons `(Decuded ,v ,rs) trail2))]
+                   ; pure literal rule (buggy)
+;                   ['[(cons v _) (not '[(cons (cons ,v _) _) (cons (cons ,v rs) _)])]
+;                    (cdcl2 vars cnf (cons `(Deduced ,(neg v) ,rs) trail2))]
                    ['[_ _]
                     (cdcl2 vars cnf (cons `(Guessed ,(car vars2)) trail2))]))))
 
@@ -474,5 +480,5 @@
    {-3 -40 8}
    {-23 -31 38}})
 
-;(print (cdcl (iota 20 1) problem20)) ; #t ; 0.752 (2019/06/26 20:49)
-(print (cdcl (iota 50 1) problem50)) ; #f ; 51.551 (simple backtracking 2019/06/26 21:50) 34.394 (with learning: 2019/06/26 20:51) ; 27.600 (with learning and backjumping 2019/06/26 21:47)
+(print (cdcl (iota 20 1) problem20)) ; #t ; 0.752 (2019/06/26 20:49)
+;(print (cdcl (iota 50 1) problem50)) ; #f ; 51.551 (simple backtracking 2019/06/26 21:50) 34.394 (with learning: 2019/06/26 20:51) ; 27.600 (with learning and backjumping 2019/06/26 21:47)
