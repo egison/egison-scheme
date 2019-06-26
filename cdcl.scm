@@ -48,6 +48,17 @@
                  ['[(cons l ls) (cons (deduced ,(neg l) ds) _)] (learn (lset-union eq? ls ds) trail)]
                  ['[_ _] cl])))
 
+(define backjump
+  (lambda [lc trail]
+    (match-first trail (List Assignment)
+                 [(join _ (cons (guessed l) trail2))
+                  (if (member (neg l) lc)
+                      trail
+                      (backjump lc trail2))]
+                 [_ trail]
+                 )))
+
+
 (define delete-literal
   (lambda [l cnf]
     (map (lambda [c] (cons (match-all (car c) (Multiset Integer)
@@ -74,12 +85,14 @@
 (define unit-propagate3
   (lambda [vars cnf trail]
     (match-first `(,vars ,cnf) `(,(Multiset Integer) ,(Multiset `[,(Multiset Integer) ,(Multiset Integer)]))
+                 ; empty clause
+                 ['[_ (cons '[(nil) _] _)] `(,vars ,cnf ,trail)]
                  ; 1-literal rule
                  ['[_ (cons '[(cons l (nil)) (cons ,l rs)] _)]
                   (unit-propagate3 (delete (abs l) vars) (assign-true l cnf) (cons `(Deduced ,l ,rs) trail))]
                  ; the variable v does not appear
-                 ['[(cons v vs) (and (not (cons '[(cons (or ,v ,(neg v)) _) _] _)) (cons '[_ (cons (or ,v ,(neg v)) rs)] _))]
-                  (unit-propagate3 vs cnf (cons `(Deduced ,v ,rs) trail))]
+;                 ['[(cons v vs) (and (not (cons '[(cons (or ,v ,(neg v)) _) _] _)) (cons '[_ (cons (or ,v ,(neg v)) rs)] _))]
+;                  (unit-propagate3 vs cnf (cons `(Deduced ,v ,rs) trail))]
                  ; otherwise
                  ['[_ _] `(,vars ,cnf ,trail)]
                  )))
@@ -107,24 +120,22 @@
                    ['[_ (cons '[(nil) cl] _)]
                     (match-first trail2 (List Assignment)
                                  [(join _ (cons (guessed l) trail3))
+                                  ; simple from here
 ;                                  (cdcl2 vars cnf (cons `(Fixed ,(neg l)) trail3)) ; without learning
-                                  ; with learning from here
-                                  (let {[lc (learn cl trail2)]}
-                                    (print "learning result:")
-                                    (print `(,cl ,lc))
-                                    (cdcl2 vars (cons `(,lc ,lc) cnf) (cons `(Fixed ,(neg l)) trail3)))
+                                  ; simple by here
+;                                  (let {[lc (learn cl trail2)]}
+;                                    (print "learning result:")
+;                                    (print trail2)
+;                                    (print cnf2)
+;                                    (print `(,cl ,lc))
+;                                    (cdcl2 vars (cons `(,lc ,lc) cnf) (cons `(Fixed ,(neg l)) trail3)))
                                   ; with learning by here
                                   ; with backjumping from here
-;                                  (let {[lc (learn cl trail2)]}
-;                                    (print "backjumping")
-;                                    (print lc)
-;                                    (print trail3)
-;                                    (match-first trail3 (List Assignment)
-;                                                 [(join _ (and (cons (guessed (pred (lambda [x] (member (neg x) lc)))) _) trail4))
-;                                                  (cdcl2 vars (cons `(,lc ,lc) cnf) (cons `(Fixed ,(neg l)) trail4))]
-;                                                 [_
-;                                                  (cdcl2 vars (cons `(,lc ,lc) cnf) (cons `(Fixed ,(neg l)) '{}))]
-;                                                 ))
+                                  (let* {[lc (learn cl trail2)]
+                                         [trail4 (backjump lc trail3)]}
+                                    (print "backjumping")
+                                    (print lc)
+                                    (cdcl2 vars (cons `(,lc ,lc) cnf) (cons `(Fixed ,(neg l)) trail4)))
                                   ; with backjumping by here
                                   ]
                                  [_ #f])]
@@ -463,5 +474,5 @@
    {-3 -40 8}
    {-23 -31 38}})
 
-(print (cdcl (iota 20 1) problem20)) ; #t
-;(print (cdcl (iota 50 1) problem50)) ;  1:20.25 (without learning), 1:08.73 (with learning)
+;(print (cdcl (iota 20 1) problem20)) ; #t ; 0.752 (2019/06/26 20:49)
+(print (cdcl (iota 50 1) problem50)) ; #f ; 51.551 (simple backtracking 2019/06/26 21:50) 34.394 (with learning: 2019/06/26 20:51) ; 27.600 (with learning and backjumping 2019/06/26 21:47)
