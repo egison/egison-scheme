@@ -116,9 +116,15 @@
                                   ; with learning by here
                                   ; with backjumping from here
 ;                                  (let {[lc (learn cl trail2)]}
+;                                    (print "backjumping")
+;                                    (print lc)
+;                                    (print trail3)
 ;                                    (match-first trail3 (List Assignment)
-;                                                 [(join _ (and (cons (guessed (predicate (lambda [x] (member x lc)))) _) trail4))
-                                                  (cdcl2 vars (cons `(,lc ,lc) cnf) (cons `(Fixed ,(neg l)) trail4))]))
+;                                                 [(join _ (and (cons (guessed (pred (lambda [x] (member (neg x) lc)))) _) trail4))
+;                                                  (cdcl2 vars (cons `(,lc ,lc) cnf) (cons `(Fixed ,(neg l)) trail4))]
+;                                                 [_
+;                                                  (cdcl2 vars (cons `(,lc ,lc) cnf) (cons `(Fixed ,(neg l)) '{}))]
+;                                                 ))
                                   ; with backjumping by here
                                   ]
                                  [_ #f])]

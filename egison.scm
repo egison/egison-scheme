@@ -45,6 +45,7 @@
   (lambda (p xs)
         (match p
                (('unquote q) (cons (list 'val (list 'unquote `(lambda ,xs ,q))) xs))
+               (('pred q) (cons (list 'pred (list 'unquote `(lambda ,xs ,q))) xs))
                (('quote (? list? ps))
                 (let {[ret (rewrite-patterns-helper ps xs)]}
                   (cons `(quote ,(car ret)) (cdr ret))))
@@ -96,6 +97,7 @@
   (lambda (p)
     (match p
            (('val _) '())
+           (('pred _) '())
            (('quote args)
             (concatenate (map extract-pattern-variables args)))
            ((c . args)
@@ -139,6 +141,10 @@
            (('MState {[('val f) M t] . mStack} ret)
             (let {[next-matomss (M `(val ,(apply f ret)) t)]}
               (map (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss)))
+           (('MState {[('pred f) _ t] . mStack} ret)
+            (if ((apply f ret) t)
+                (list `(MState ,mStack ,ret))
+                '()))
            (('MState {[('and . ps) M t] . mStack} ret)
             (let {[next-matoms (map (lambda (p) `[,p ,M ,t]) ps)]}
               (list `(MState ,(append next-matoms mStack) ,ret))))
