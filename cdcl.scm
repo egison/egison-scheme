@@ -89,22 +89,22 @@
 
 (define init-vars
   (lambda [vs]
-    (map (lambda [v] `(,v ,0)) vs)))
+    (append (map (lambda [v] `(,v ,0)) vs)
+            (map (lambda [v] `(,(neg v) ,0)) vs))))
 
 (define add-vars
   (lambda [vs vars]
     (match-first `[,vs ,vars] `[,(List Literal) ,(List `[,Integer ,Integer])]
                  ['[(nil) _]
                   (sort vars > cadr)]
-                 ['[(cons v vs2) (join hs (cons '[,(abs v) c] ts))]
+                 ['[(cons v vs2) (join hs (cons '[,v c] ts))]
                   (add-vars vs2 (append hs (cons `[,v ,(+ c 1)] ts)))]
                  )))
 
 (define delete-var
   (lambda [v vars]
-    (match-first vars (List `[,Integer ,Integer])
-                 [(join hs (cons '[,(abs v) _] ts))
-                  (append hs ts)]
+    (match-first vars (Multiset `[,Integer ,Integer])
+                 [(cons '[,v _] (cons '[,(neg v) _] vars2)) vars2]
                  [_ 'error-in-delete-var]
                  )))
 
@@ -158,8 +158,8 @@
 
 (define cdcl2
   (lambda [count stage vars cnf trail]
-    (print count)
-    (print trail)
+;    (print count)
+;    (print trail)
     (let-values {[(vars2 cnf2 trail2) (apply values (unit-propagate stage vars cnf trail))]}
       (match-first `[,vars2 ,cnf2] `[,(Multiset Integer) ,(Multiset `[,(Multiset Integer) ,Something])]
                    ['[_ (nil)] #t]
@@ -168,10 +168,12 @@
                                  [(join _ (cons (either '[l ,stage]) trail3))
                                   (let-values {[(s lc) (apply values (learn stage cl trail2))]}
                                     (let {[trail4 (backjump s trail3)]}
-                                      (print "learning result:")
-                                      (print `(,s ,cl ,lc))
+;                                      (print "learning result:")
+;                                      (print `(,s ,cl ,lc))
 ;                                      (print trail2)
-                                      (cdcl2 (+ count 1) s (add-vars (map abs lc) vars) (cons `(,lc ,lc) cnf) trail4)))
+                                      (print count)
+                                      (print vars2)
+                                      (cdcl2 (+ count 1) s (add-vars lc vars) (cons `(,lc ,lc) cnf) trail4)))
                                   ]
                                  [_ #f])]
                    ['[_ _]
@@ -505,5 +507,5 @@
    {-3 -40 8}
    {-23 -31 38}})
 
-;(print (cdcl (iota 20 1) problem20)) ; #t ; 0.597 (with learning and backjumping 2019/06/27 15:43)
-(print (cdcl (iota 50 1) problem50)) ; #f ; 22.086 (with learning and backjumping 2019/06/27 15:43)
+;(print (cdcl (iota 20 1) problem20)) ; #t ; (after implementing VSIDS 2019/06/27 17:30)
+(print (cdcl (iota 50 1) problem50)) ; #f ; (after implementing VSIDS 2019/06/27 17:30)

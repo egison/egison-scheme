@@ -1,0 +1,275 @@
+0
+()
+1
+((Guessed (-1 1)))
+2
+((Guessed (-2 2)) (Guessed (-1 1)))
+3
+((Guessed (-3 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+4
+((Guessed (-4 4)) (Deduced (-32 3) ((10 3) (-18 3))) (Deduced (-10 3) ((-27 3) (1 1))) (Deduced (27 3) ((1 1) (-16 3))) (Deduced (18 3) ((-16 3) (3 3))) (Deduced (16 3) ((3 3) (2 2))) (Guessed (-3 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+5
+((Guessed (-5 5)) (Deduced (43 4) ((-15 4) (10 3))) (Deduced (15 4) ((-28 4) (10 3))) (Deduced (28 4) ((32 3) (4 4))) (Guessed (-4 4)) (Deduced (-32 3) ((10 3) (-18 3))) (Deduced (-10 3) ((-27 3) (1 1))) (Deduced (27 3) ((1 1) (-16 3))) (Deduced (18 3) ((-16 3) (3 3))) (Deduced (16 3) ((3 3) (2 2))) (Guessed (-3 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+6
+((Guessed (-6 6)) (Guessed (-5 5)) (Deduced (43 4) ((-15 4) (10 3))) (Deduced (15 4) ((-28 4) (10 3))) (Deduced (28 4) ((32 3) (4 4))) (Guessed (-4 4)) (Deduced (-32 3) ((10 3) (-18 3))) (Deduced (-10 3) ((-27 3) (1 1))) (Deduced (27 3) ((1 1) (-16 3))) (Deduced (18 3) ((-16 3) (3 3))) (Deduced (16 3) ((3 3) (2 2))) (Guessed (-3 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+learning result:
+(2 (-45 32 -35) (-28 2 49 -43 -27 -15 32))
+7
+((Guessed (-2 2)) (Guessed (-1 1)))
+8
+((Guessed (-15 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+9
+((Guessed (-27 4)) (Guessed (-15 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+10
+((Guessed (-28 5)) (Deduced (-38 4) ((46 4) (-39 4))) (Deduced (39 4) ((-3 4) (46 4))) (Deduced (3 4) ((16 4) (2 2))) (Deduced (-16 4) ((1 1) (27 4))) (Deduced (-46 4) ((27 4) (2 2))) (Guessed (-27 4)) (Guessed (-15 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+11
+((Guessed (-32 6)) (Guessed (-28 5)) (Deduced (-38 4) ((46 4) (-39 4))) (Deduced (39 4) ((-3 4) (46 4))) (Deduced (3 4) ((16 4) (2 2))) (Deduced (-16 4) ((1 1) (27 4))) (Deduced (-46 4) ((27 4) (2 2))) (Guessed (-27 4)) (Guessed (-15 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+learning result:
+(4 (27 32 -42) (16 38 27 32))
+12
+((Guessed (-27 4)) (Guessed (-15 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+13
+((Guessed (-28 5)) (Deduced (32 4) ((16 4) (38 4) (27 4))) (Deduced (-38 4) ((46 4) (-39 4))) (Deduced (39 4) ((-3 4) (46 4))) (Deduced (3 4) ((16 4) (2 2))) (Deduced (-16 4) ((1 1) (27 4))) (Deduced (-46 4) ((27 4) (2 2))) (Guessed (-27 4)) (Guessed (-15 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+14
+((Guessed (-43 6)) (Guessed (-28 5)) (Deduced (32 4) ((16 4) (38 4) (27 4))) (Deduced (-38 4) ((46 4) (-39 4))) (Deduced (39 4) ((-3 4) (46 4))) (Deduced (3 4) ((16 4) (2 2))) (Deduced (-16 4) ((1 1) (27 4))) (Deduced (-46 4) ((27 4) (2 2))) (Guessed (-27 4)) (Guessed (-15 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+15
+((Guessed (-49 7)) (Guessed (-43 6)) (Guessed (-28 5)) (Deduced (32 4) ((16 4) (38 4) (27 4))) (Deduced (-38 4) ((46 4) (-39 4))) (Deduced (39 4) ((-3 4) (46 4))) (Deduced (3 4) ((16 4) (2 2))) (Deduced (-16 4) ((1 1) (27 4))) (Deduced (-46 4) ((27 4) (2 2))) (Guessed (-27 4)) (Guessed (-15 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+16
+((Guessed (-4 8)) (Deduced (41 7) ((49 7) (2 2))) (Guessed (-49 7)) (Guessed (-43 6)) (Guessed (-28 5)) (Deduced (32 4) ((16 4) (38 4) (27 4))) (Deduced (-38 4) ((46 4) (-39 4))) (Deduced (39 4) ((-3 4) (46 4))) (Deduced (3 4) ((16 4) (2 2))) (Deduced (-16 4) ((1 1) (27 4))) (Deduced (-46 4) ((27 4) (2 2))) (Guessed (-27 4)) (Guessed (-15 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+17
+((Guessed (-5 9)) (Guessed (-4 8)) (Deduced (41 7) ((49 7) (2 2))) (Guessed (-49 7)) (Guessed (-43 6)) (Guessed (-28 5)) (Deduced (32 4) ((16 4) (38 4) (27 4))) (Deduced (-38 4) ((46 4) (-39 4))) (Deduced (39 4) ((-3 4) (46 4))) (Deduced (3 4) ((16 4) (2 2))) (Deduced (-16 4) ((1 1) (27 4))) (Deduced (-46 4) ((27 4) (2 2))) (Guessed (-27 4)) (Guessed (-15 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+18
+((Guessed (-6 10)) (Guessed (-5 9)) (Guessed (-4 8)) (Deduced (41 7) ((49 7) (2 2))) (Guessed (-49 7)) (Guessed (-43 6)) (Guessed (-28 5)) (Deduced (32 4) ((16 4) (38 4) (27 4))) (Deduced (-38 4) ((46 4) (-39 4))) (Deduced (39 4) ((-3 4) (46 4))) (Deduced (3 4) ((16 4) (2 2))) (Deduced (-16 4) ((1 1) (27 4))) (Deduced (-46 4) ((27 4) (2 2))) (Guessed (-27 4)) (Guessed (-15 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+19
+((Guessed (-7 11)) (Deduced (20 10) ((18 10) (6 10))) (Deduced (-18 10) ((6 10) (46 4))) (Guessed (-6 10)) (Guessed (-5 9)) (Guessed (-4 8)) (Deduced (41 7) ((49 7) (2 2))) (Guessed (-49 7)) (Guessed (-43 6)) (Guessed (-28 5)) (Deduced (32 4) ((16 4) (38 4) (27 4))) (Deduced (-38 4) ((46 4) (-39 4))) (Deduced (39 4) ((-3 4) (46 4))) (Deduced (3 4) ((16 4) (2 2))) (Deduced (-16 4) ((1 1) (27 4))) (Deduced (-46 4) ((27 4) (2 2))) (Guessed (-27 4)) (Guessed (-15 3)) (Guessed (-2 2)) (Guessed (-1 1)))
+learning result:
+(1 (-24 7 47) (-32 1 7))
+20
+((Guessed (-1 1)))
+21
+((Guessed (-32 2)) (Guessed (-1 1)))
+22
+((Guessed (-27 3)) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(1 (-2 12 -26) (32 1 27))
+23
+((Guessed (-1 1)))
+24
+((Guessed (-32 2)) (Guessed (-1 1)))
+25
+((Guessed (-2 3)) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+26
+((Guessed (-15 4)) (Guessed (-2 3)) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+27
+((Guessed (-43 5)) (Deduced (40 4) ((10 2) (-4 4))) (Deduced (4 4) ((32 2) (28 4))) (Deduced (-28 4) ((15 4) (10 2))) (Guessed (-15 4)) (Guessed (-2 3)) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(1 (-40 12 -42) (10 1 -40 12))
+28
+((Guessed (-1 1)))
+29
+((Guessed (-32 2)) (Guessed (-1 1)))
+30
+((Guessed (-2 3)) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+31
+((Guessed (-15 4)) (Guessed (-2 3)) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+32
+((Guessed (-49 5)) (Deduced (14 4) ((-43 4) (-12 4))) (Deduced (43 4) ((-12 4) (10 2))) (Deduced (12 4) ((10 2) (1 1) (-40 4))) (Deduced (40 4) ((10 2) (-4 4))) (Deduced (4 4) ((32 2) (28 4))) (Deduced (-28 4) ((15 4) (10 2))) (Guessed (-15 4)) (Guessed (-2 3)) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(2 (-3 -40 8) (2 -43 -27 -4 49 -40))
+33
+((Guessed (-32 2)) (Guessed (-1 1)))
+34
+((Guessed (-2 3)) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+35
+((Guessed (-43 4)) (Guessed (-2 3)) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(1 (-12 43 10) (32 1 43 10))
+36
+((Guessed (-1 1)))
+37
+((Guessed (-32 2)) (Guessed (-1 1)))
+38
+((Guessed (-2 3)) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+39
+((Guessed (-49 4)) (Guessed (-2 3)) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(2 (10 -4 40) (32 49 -27 -43 2 10))
+40
+((Guessed (-32 2)) (Guessed (-1 1)))
+41
+((Guessed (-2 3)) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(1 (-26 2 -44) (10 32 -43 -27 1 2))
+42
+((Guessed (-1 1)))
+43
+((Guessed (-32 2)) (Guessed (-1 1)))
+44
+((Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+45
+((Guessed (-40 4)) (Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(1 (-45 32 -35) (10 -28 49 -2 1 -43 32))
+46
+((Guessed (-1 1)))
+47
+((Guessed (-32 2)) (Guessed (-1 1)))
+48
+((Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+49
+((Guessed (-15 4)) (Deduced (14 3) ((-43 2) (-12 3))) (Deduced (12 3) ((10 2) (1 1) (-40 3))) (Deduced (40 3) ((10 2) (-4 3))) (Deduced (4 3) ((32 2) (28 3))) (Deduced (-28 3) ((10 2) (49 3) (-2 2) (1 1) (-43 2) (32 2))) (Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+50
+((Guessed (-16 5)) (Guessed (-15 4)) (Deduced (14 3) ((-43 2) (-12 3))) (Deduced (12 3) ((10 2) (1 1) (-40 3))) (Deduced (40 3) ((10 2) (-4 3))) (Deduced (4 3) ((32 2) (28 3))) (Deduced (-28 3) ((10 2) (49 3) (-2 2) (1 1) (-43 2) (32 2))) (Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(2 (33 37 10) (16 -43 32 -4 10))
+51
+((Guessed (-32 2)) (Guessed (-1 1)))
+52
+((Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+53
+((Guessed (-15 4)) (Deduced (14 3) ((-43 2) (-12 3))) (Deduced (12 3) ((10 2) (1 1) (-40 3))) (Deduced (40 3) ((10 2) (-4 3))) (Deduced (16 3) ((-43 2) (32 2) (-4 3) (10 2))) (Deduced (4 3) ((32 2) (28 3))) (Deduced (-28 3) ((10 2) (49 3) (-2 2) (1 1) (-43 2) (32 2))) (Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+54
+((Guessed (-38 5)) (Guessed (-15 4)) (Deduced (14 3) ((-43 2) (-12 3))) (Deduced (12 3) ((10 2) (1 1) (-40 3))) (Deduced (40 3) ((10 2) (-4 3))) (Deduced (16 3) ((-43 2) (32 2) (-4 3) (10 2))) (Deduced (4 3) ((32 2) (28 3))) (Deduced (-28 3) ((10 2) (49 3) (-2 2) (1 1) (-43 2) (32 2))) (Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+55
+((Guessed (-7 6)) (Guessed (-38 5)) (Guessed (-15 4)) (Deduced (14 3) ((-43 2) (-12 3))) (Deduced (12 3) ((10 2) (1 1) (-40 3))) (Deduced (40 3) ((10 2) (-4 3))) (Deduced (16 3) ((-43 2) (32 2) (-4 3) (10 2))) (Deduced (4 3) ((32 2) (28 3))) (Deduced (-28 3) ((10 2) (49 3) (-2 2) (1 1) (-43 2) (32 2))) (Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+56
+((Guessed (-3 7)) (Deduced (-6 6) ((-40 3) (7 6))) (Deduced (-19 6) ((7 6) (32 2))) (Guessed (-7 6)) (Guessed (-38 5)) (Guessed (-15 4)) (Deduced (14 3) ((-43 2) (-12 3))) (Deduced (12 3) ((10 2) (1 1) (-40 3))) (Deduced (40 3) ((10 2) (-4 3))) (Deduced (16 3) ((-43 2) (32 2) (-4 3) (10 2))) (Deduced (4 3) ((32 2) (28 3))) (Deduced (-28 3) ((10 2) (49 3) (-2 2) (1 1) (-43 2) (32 2))) (Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(2 (-45 32 -35) (-16 6 -45 32))
+57
+((Guessed (-32 2)) (Guessed (-1 1)))
+58
+((Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+59
+((Guessed (-15 4)) (Deduced (14 3) ((-43 2) (-12 3))) (Deduced (12 3) ((10 2) (1 1) (-40 3))) (Deduced (40 3) ((10 2) (-4 3))) (Deduced (16 3) ((-43 2) (32 2) (-4 3) (10 2))) (Deduced (4 3) ((32 2) (28 3))) (Deduced (-28 3) ((10 2) (49 3) (-2 2) (1 1) (-43 2) (32 2))) (Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+60
+((Guessed (-38 5)) (Guessed (-15 4)) (Deduced (14 3) ((-43 2) (-12 3))) (Deduced (12 3) ((10 2) (1 1) (-40 3))) (Deduced (40 3) ((10 2) (-4 3))) (Deduced (16 3) ((-43 2) (32 2) (-4 3) (10 2))) (Deduced (4 3) ((32 2) (28 3))) (Deduced (-28 3) ((10 2) (49 3) (-2 2) (1 1) (-43 2) (32 2))) (Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+61
+((Guessed (-7 6)) (Guessed (-38 5)) (Guessed (-15 4)) (Deduced (14 3) ((-43 2) (-12 3))) (Deduced (12 3) ((10 2) (1 1) (-40 3))) (Deduced (40 3) ((10 2) (-4 3))) (Deduced (16 3) ((-43 2) (32 2) (-4 3) (10 2))) (Deduced (4 3) ((32 2) (28 3))) (Deduced (-28 3) ((10 2) (49 3) (-2 2) (1 1) (-43 2) (32 2))) (Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(1 (-22 49 33) (1 -4 32 -47 38 49))
+62
+((Guessed (-1 1)))
+63
+((Guessed (-32 2)) (Guessed (-1 1)))
+64
+((Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+65
+((Guessed (-38 4)) (Deduced (14 3) ((-43 2) (-12 3))) (Deduced (12 3) ((10 2) (1 1) (-40 3))) (Deduced (40 3) ((10 2) (-4 3))) (Deduced (16 3) ((-43 2) (32 2) (-4 3) (10 2))) (Deduced (4 3) ((32 2) (28 3))) (Deduced (-28 3) ((10 2) (49 3) (-2 2) (1 1) (-43 2) (32 2))) (Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+66
+((Guessed (-15 5)) (Deduced (-47 4) ((1 1) (-4 3) (32 2) (38 4) (49 3))) (Guessed (-38 4)) (Deduced (14 3) ((-43 2) (-12 3))) (Deduced (12 3) ((10 2) (1 1) (-40 3))) (Deduced (40 3) ((10 2) (-4 3))) (Deduced (16 3) ((-43 2) (32 2) (-4 3) (10 2))) (Deduced (4 3) ((32 2) (28 3))) (Deduced (-28 3) ((10 2) (49 3) (-2 2) (1 1) (-43 2) (32 2))) (Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+67
+((Guessed (-7 6)) (Guessed (-15 5)) (Deduced (-47 4) ((1 1) (-4 3) (32 2) (38 4) (49 3))) (Guessed (-38 4)) (Deduced (14 3) ((-43 2) (-12 3))) (Deduced (12 3) ((10 2) (1 1) (-40 3))) (Deduced (40 3) ((10 2) (-4 3))) (Deduced (16 3) ((-43 2) (32 2) (-4 3) (10 2))) (Deduced (4 3) ((32 2) (28 3))) (Deduced (-28 3) ((10 2) (49 3) (-2 2) (1 1) (-43 2) (32 2))) (Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(2 (33 37 10) (28 -4 47 24 -16 10))
+68
+((Guessed (-32 2)) (Guessed (-1 1)))
+69
+((Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+70
+((Guessed (-38 4)) (Deduced (14 3) ((-43 2) (-12 3))) (Deduced (12 3) ((10 2) (1 1) (-40 3))) (Deduced (40 3) ((10 2) (-4 3))) (Deduced (16 3) ((-43 2) (32 2) (-4 3) (10 2))) (Deduced (4 3) ((32 2) (28 3))) (Deduced (-28 3) ((10 2) (49 3) (-2 2) (1 1) (-43 2) (32 2))) (Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(2 (6 -2 -7) (28 -2 -7))
+71
+((Guessed (-32 2)) (Guessed (-1 1)))
+72
+((Guessed (-49 3)) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(1 (-8 -44 -39) (-43 10 49 -2 1 32))
+73
+((Guessed (-1 1)))
+74
+((Guessed (-32 2)) (Guessed (-1 1)))
+75
+((Guessed (-16 3)) (Deduced (6 2) ((-49 2) (10 2))) (Deduced (49 2) ((-43 2) (10 2) (-2 2) (1 1) (32 2))) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(2 (44 -27 -7) (32 -6 -2 16 -49 -27))
+76
+((Guessed (-32 2)) (Guessed (-1 1)))
+77
+((Guessed (-4 3)) (Deduced (16 2) ((32 2) (-6 2) (-2 2) (-49 2) (-27 2))) (Deduced (6 2) ((-49 2) (10 2))) (Deduced (49 2) ((-43 2) (10 2) (-2 2) (1 1) (32 2))) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+78
+((Guessed (-40 4)) (Deduced (5 3) ((-2 2) (-30 3))) (Deduced (15 3) ((-28 3) (10 2))) (Deduced (28 3) ((32 2) (4 3))) (Deduced (30 3) ((-49 2) (4 3))) (Guessed (-4 3)) (Deduced (16 2) ((32 2) (-6 2) (-2 2) (-49 2) (-27 2))) (Deduced (6 2) ((-49 2) (10 2))) (Deduced (49 2) ((-43 2) (10 2) (-2 2) (1 1) (32 2))) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+79
+((Guessed (-38 5)) (Guessed (-40 4)) (Deduced (5 3) ((-2 2) (-30 3))) (Deduced (15 3) ((-28 3) (10 2))) (Deduced (28 3) ((32 2) (4 3))) (Deduced (30 3) ((-49 2) (4 3))) (Guessed (-4 3)) (Deduced (16 2) ((32 2) (-6 2) (-2 2) (-49 2) (-27 2))) (Deduced (6 2) ((-49 2) (10 2))) (Deduced (49 2) ((-43 2) (10 2) (-2 2) (1 1) (32 2))) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+80
+((Guessed (-47 6)) (Guessed (-38 5)) (Guessed (-40 4)) (Deduced (5 3) ((-2 2) (-30 3))) (Deduced (15 3) ((-28 3) (10 2))) (Deduced (28 3) ((32 2) (4 3))) (Deduced (30 3) ((-49 2) (4 3))) (Guessed (-4 3)) (Deduced (16 2) ((32 2) (-6 2) (-2 2) (-49 2) (-27 2))) (Deduced (6 2) ((-49 2) (10 2))) (Deduced (49 2) ((-43 2) (10 2) (-2 2) (1 1) (32 2))) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+81
+((Guessed (-7 7)) (Guessed (-47 6)) (Guessed (-38 5)) (Guessed (-40 4)) (Deduced (5 3) ((-2 2) (-30 3))) (Deduced (15 3) ((-28 3) (10 2))) (Deduced (28 3) ((32 2) (4 3))) (Deduced (30 3) ((-49 2) (4 3))) (Guessed (-4 3)) (Deduced (16 2) ((32 2) (-6 2) (-2 2) (-49 2) (-27 2))) (Deduced (6 2) ((-49 2) (10 2))) (Deduced (49 2) ((-43 2) (10 2) (-2 2) (1 1) (32 2))) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(3 (-24 7 47) (-5 -15 7 47))
+82
+((Guessed (-4 3)) (Deduced (16 2) ((32 2) (-6 2) (-2 2) (-49 2) (-27 2))) (Deduced (6 2) ((-49 2) (10 2))) (Deduced (49 2) ((-43 2) (10 2) (-2 2) (1 1) (32 2))) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+83
+((Guessed (-47 4)) (Deduced (5 3) ((-2 2) (-30 3))) (Deduced (15 3) ((-28 3) (10 2))) (Deduced (28 3) ((32 2) (4 3))) (Deduced (30 3) ((-49 2) (4 3))) (Guessed (-4 3)) (Deduced (16 2) ((32 2) (-6 2) (-2 2) (-49 2) (-27 2))) (Deduced (6 2) ((-49 2) (10 2))) (Deduced (49 2) ((-43 2) (10 2) (-2 2) (1 1) (32 2))) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(2 (-16 36 -37) (-28 -16 -37))
+84
+((Guessed (-32 2)) (Guessed (-1 1)))
+85
+((Guessed (-28 3)) (Deduced (16 2) ((32 2) (-6 2) (-2 2) (-49 2) (-27 2))) (Deduced (6 2) ((-49 2) (10 2))) (Deduced (49 2) ((-43 2) (10 2) (-2 2) (1 1) (32 2))) (Deduced (2 2) ((10 2) (32 2) (-43 2) (-27 2) (1 1))) (Deduced (43 2) ((32 2) (1 1) (10 2))) (Deduced (-10 2) ((-27 2) (1 1))) (Deduced (27 2) ((32 2) (1 1))) (Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(2 (10 -4 40) (-2 28 32 -6 10))
+86
+((Guessed (-32 2)) (Guessed (-1 1)))
+learning result:
+(1 (-49 44 -42) (32 1))
+87
+((Guessed (-1 1)))
+88
+((Guessed (-10 2)) (Deduced (7 1) ((-32 1) (1 1))) (Deduced (32 1) ((1 1))) (Guessed (-1 1)))
+89
+((Guessed (-2 3)) (Deduced (-18 2) ((10 2) (-32 1))) (Guessed (-10 2)) (Deduced (7 1) ((-32 1) (1 1))) (Deduced (32 1) ((1 1))) (Guessed (-1 1)))
+90
+((Guessed (-43 4)) (Deduced (-46 3) ((-32 1) (2 3))) (Guessed (-2 3)) (Deduced (-18 2) ((10 2) (-32 1))) (Guessed (-10 2)) (Deduced (7 1) ((-32 1) (1 1))) (Deduced (32 1) ((1 1))) (Guessed (-1 1)))
+learning result:
+(1 (-17 -48 49) (-7 10 1 43 46 2))
+91
+((Guessed (-1 1)))
+92
+((Guessed (-10 2)) (Deduced (7 1) ((-32 1) (1 1))) (Deduced (32 1) ((1 1))) (Guessed (-1 1)))
+93
+((Guessed (-2 3)) (Deduced (-18 2) ((10 2) (-32 1))) (Guessed (-10 2)) (Deduced (7 1) ((-32 1) (1 1))) (Deduced (32 1) ((1 1))) (Guessed (-1 1)))
+94
+((Guessed (-27 4)) (Deduced (43 3) ((-7 1) (10 2) (1 1) (46 3) (2 3))) (Deduced (-46 3) ((-32 1) (2 3))) (Guessed (-2 3)) (Deduced (-18 2) ((10 2) (-32 1))) (Guessed (-10 2)) (Deduced (7 1) ((-32 1) (1 1))) (Deduced (32 1) ((1 1))) (Guessed (-1 1)))
+learning result:
+(1 (-22 -37 38) (1 27 2 46 -7))
+95
+((Guessed (-1 1)))
+96
+((Guessed (-2 2)) (Deduced (7 1) ((-32 1) (1 1))) (Deduced (32 1) ((1 1))) (Guessed (-1 1)))
+learning result:
+(1 (-31 -27 -42) (-7 1 -32 -27))
+97
+((Guessed (-1 1)))
+98
+((Guessed (-2 2)) (Deduced (13 1) ((27 1) (-7 1))) (Deduced (-16 1) ((1 1) (27 1))) (Deduced (-27 1) ((-7 1) (1 1) (-32 1))) (Deduced (7 1) ((-32 1) (1 1))) (Deduced (32 1) ((1 1))) (Guessed (-1 1)))
+learning result:
+(1 (27 -46 2) (-7 1 27 2))
+99
+((Guessed (-1 1)))
+100
+((Guessed (-10 2)) (Deduced (-18 1) ((45 1) (-12 1))) (Deduced (23 1) ((-3 1) (-13 1))) (Deduced (13 1) ((27 1) (-7 1))) (Deduced (17 1) ((-6 1) (-7 1))) (Deduced (14 1) ((-43 1) (-12 1))) (Deduced (43 1) ((-12 1) (-29 1))) (Deduced (3 1) ((-6 1) (-29 1))) (Deduced (6 1) ((-2 1) (-7 1))) (Deduced (-45 1) ((-12 1) (50 1))) (Deduced (-50 1) ((-28 1) (27 1))) (Deduced (12 1) ((-2 1) (-26 1))) (Deduced (29 1) ((-7 1) (-26 1))) (Deduced (26 1) ((-2 1) (16 1))) (Deduced (-16 1) ((1 1) (27 1))) (Deduced (28 1) ((-2 1) (-7 1))) (Deduced (2 1) ((-7 1) (1 1) (27 1))) (Deduced (-27 1) ((-7 1) (1 1) (-32 1))) (Deduced (7 1) ((-32 1) (1 1))) (Deduced (32 1) ((1 1))) (Guessed (-1 1)))
+learning result:
+(1 (42 -32 -44) (-43 1 42 -32))
+101
+((Guessed (-1 1)))
+learning result:
+(1 (-8 -44 -39) (1))
+102
+()
+103
+((Guessed (-32 2)) (Deduced (1 1) ()))
+104
+((Guessed (-2 3)) (Guessed (-32 2)) (Deduced (1 1) ()))
+105
+((Guessed (-10 4)) (Guessed (-2 3)) (Guessed (-32 2)) (Deduced (1 1) ()))
+106
+((Guessed (-27 5)) (Guessed (-10 4)) (Guessed (-2 3)) (Guessed (-32 2)) (Deduced (1 1) ()))
+107
+((Guessed (-43 6)) (Deduced (-42 5) ((27 5) (32 2))) (Deduced (-46 5) ((27 5) (2 3))) (Guessed (-27 5)) (Guessed (-10 4)) (Guessed (-2 3)) (Guessed (-32 2)) (Deduced (1 1) ()))
+learning result:
+(1 (-6 -40 7) (-1 43 10 27 46 32))
+108
+((Deduced (-42 5) ((27 5) (32 2))) (Deduced (-46 5) ((27 5) (2 3))) (Guessed (-27 5)) (Guessed (-10 4)) (Guessed (-2 3)) (Guessed (-32 2)) (Deduced (1 1) ()))
+#f
