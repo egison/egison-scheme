@@ -10,72 +10,29 @@
       [('whichever pi) `{{[,pi ,Integer ,t]}}]
       [_ `{{[,p ,Integer ,t]}}])))
 
-(define Point `[,Integer ,Integer])
-
 ;; buggy for value pattern
 (define Assignment
   (lambda (p t)
     (match p
       [('deduced pi pls)
        (match t
-         [('Deduced i ls) `{{[,pi ,Point ,i] [,pls ,(Multiset Point) ,ls]}}]
+         [('Deduced i ls) `{{[,pi ,Integer ,i] [,pls ,(Multiset Integer) ,ls]}}]
          [_ `{}])]
       [('guessed pi)
        (match t
-         [('Guessed i) `{{[,pi ,Point ,i]}}]
+         [('Guessed i) `{{[,pi ,Integer ,i]}}]
          [_ `{}])]
       [('Fixed pi)
        (match t
-         [('Fixed i) `{{[,pi ,Point ,i]}}]
-         [_ `{}])]
-      [('any-of pi)
-       (match t
-         [('Deduced i _) `{{[,pi ,Point ,i]}}]
-         [('Guessed i) `{{[,pi ,Point ,i]}}]
-         [('Fixed i) `{{[,pi ,Point ,i]}}]
+         [('Fixed i) `{{[,pi ,Integer ,i]}}]
          [_ `{}])]
       [('either pi)
        (match t
-         [('Guessed i) `{{[,pi ,Point ,i]}}]
-         [('Fixed i) `{{[,pi ,Point ,i]}}]
+         [('Deduced i _) `{{[,pi ,Integer ,i]}}]
+         [('Guessed i) `{{[,pi ,Integer ,i]}}]
+         [('Fixed i) `{{[,pi ,Integer ,i]}}]
          [_ `{}])]
-      [_ 'error-not-defined-in-Assignment])))
-
-(define get-stage
-  (lambda [l trail]
-    (match-first trail (List Assignment)
-                 [(join _ (cons (any-of '[,(neg l) s]) _)) s]
-                 [_ 'error-no-stage])))
-
-(define learn3
-  (lambda [stage cp trail]
-    (match-first `[,trail ,cp] `[,(List Assignment) ,(Multiset Point)]
-                 ['[(cons (deduced '[l ,stage] ds) trail2)
-                    (cons '[,(neg l) ,stage] rp)]
-                  (learn2 stage (lset-union equal? rp ds) trail2)]
-                 ['[(cons (deduced '[_ _] _) trail2) _]
-                  (learn3 stage cp trail2)]
-                 ['[_ _] 'error-learn3])))
-
-(define learn2
-  (lambda [stage cp trail]
-    (match-first cp (List Point)
-                 [(not (join _ (cons '[_ ,stage] (join _ (cons '[_ ,stage] _)))))
-                  `(,(apply min (map cadr cp)) ,(map car cp))]
-                 [_ (learn3 stage cp trail)]
-                 )))
-
-(define learn
-  (lambda [stage cl trail]
-    (learn2 stage (map (lambda [l] `[,l ,(get-stage l trail)]) cl) trail)))
-
-(define backjump
-  (lambda [s trail]
-    (match-first trail (List Assignment)
-                 [(join _ (and (cons (either '[_ ,s]) _) trail2))
-                  trail2]
-                 [_ trail]
-                 )))
+      [_ `not-defined])))
 
 (define to-cnf
   (lambda [cs]
@@ -88,7 +45,22 @@
     (map (lambda [c] (car c)) cnf)))
 
 (define neg (lambda (x) (* -1 x)))
-(define neg2 (lambda (p) (cons (neg (car p)) (cdr p))))
+
+(define learn
+  (lambda [cl trail]
+    (match-first `[,cl ,trail] `[,(Multiset Integer) ,(Multiset Assignment)]
+                 ['[(cons l ls) (cons (deduced ,(neg l) ds) _)] (learn (lset-union eq? ls ds) trail)]
+                 ['[_ _] cl])))
+
+(define backjump
+  (lambda [lc trail]
+    (match-first trail (List Assignment)
+                 [(join _ (cons (guessed l) trail2))
+                  (if (member (neg l) lc)
+                      trail
+                      (backjump lc trail2))]
+                 [_ trail]
+                 )))
 
 (define delete-literal
   (lambda [l cnf]
@@ -114,50 +86,74 @@
 ; (assign-true -1 (to-cnf '{{1 2} {-1 3} {1 -3}}))
 
 (define unit-propagate3
-  (lambda [stage vars cnf trail]
+  (lambda [vars cnf trail]
     (match-first `(,vars ,cnf) `(,(Multiset Integer) ,(Multiset `[,(Multiset Integer) ,(Multiset Integer)]))
                  ; empty clause
                  ['[_ (cons '[(nil) _] _)] `(,vars ,cnf ,trail)]
                  ; 1-literal rule
                  ['[_ (cons '[(cons l (nil)) (cons ,l rs)] _)]
-                  (unit-propagate3 stage (delete (abs l) vars) (assign-true l cnf) (cons `(Deduced [,l ,stage] ,(map (lambda [r] `[,r ,(get-stage r trail)]) rs)) trail))]
+                  (unit-propagate3 (delete (abs l) vars) (assign-true l cnf) (cons `(Deduced ,l ,rs) trail))]
+                 ; pure-literal rule (positive)
+;                 ['[(cons v vs) (not (cons '[(cons ,(neg v) _) _] _))]
+;                  (print "here")
+;                  (unit-propagate3 vs (assign-true v cnf) (cons `(Fixed ,v) trail))]
+                 ; pure-literal rule (negative)
+;                 ['[(cons v vs) (not (cons '[(cons ,v _) _] _))]
+;                  (unit-propagate3 vs (assign-true (neg v) cnf) (cons `(Fixed ,(neg v)) trail))]
                  ; otherwise
                  ['[_ _] `(,vars ,cnf ,trail)]
                  )))
 
 (define unit-propagate2
-  (lambda [stage vars cnf trail otrail]
+  (lambda [vars cnf trail otrail]
     (match-first trail (List Assignment)
-                 [(cons (any-of '[l _]) trail2) (unit-propagate2 stage (delete (abs l) vars) (assign-true l cnf) trail2 otrail)]
-                 [_ (unit-propagate3 stage vars cnf otrail)])))
+                 [(cons (either l) trail2) (unit-propagate2 (delete (abs l) vars) (assign-true l cnf) trail2 otrail)]
+                 [_ (unit-propagate3 vars cnf otrail)])))
 
 (define unit-propagate
-  (lambda [stage vars cnf trail]
-    (unit-propagate2 stage vars cnf trail trail)))
+  (lambda [vars cnf trail]
+    (unit-propagate2 vars cnf trail trail)))
 
 (define cdcl2
-  (lambda [stage vars cnf trail]
+  (lambda [vars cnf trail]
+;    (print "before")
+;    (print `(,vars ,cnf ,trail))
     (print trail)
-    (let-values {[(vars2 cnf2 trail2) (apply values (unit-propagate stage vars cnf trail))]}
+    (let-values {[(vars2 cnf2 trail2) (apply values (unit-propagate vars cnf trail))]}
+;      (print "after")
+;      (print `(,vars2 ,cnf2 ,trail2))
       (match-first `[,vars2 ,cnf2] `[,(Multiset Integer) ,(Multiset `[,(Multiset Integer) ,Something])]
                    ['[_ (nil)] #t]
                    ['[_ (cons '[(nil) cl] _)]
                     (match-first trail2 (List Assignment)
-                                 [(join _ (cons (either '[l ,stage]) trail3))
-                                  (let-values {[(s lc) (apply values (learn stage cl trail2))]}
-                                    (let {[trail4 (backjump s trail3)]}
-                                      (print "learning result:")
-                                      (print `(,s ,cl ,lc))
-;                                      (print trail2)
-                                      (cdcl2 s vars (cons `(,lc ,lc) cnf) trail4)))
+                                 [(join _ (cons (guessed l) trail3))
+                                  ; simple from here
+;                                  (cdcl2 vars cnf (cons `(Fixed ,(neg l)) trail3)) ; without learning
+                                  ; simple by here
+                                  ; with learning from here
+;                                  (let {[lc (learn cl trail2)]}
+;                                    (print "learning result:")
+;                                    (print trail2)
+;                                    (print cnf2)
+;                                    (print `(,cl ,lc))
+;                                    (cdcl2 vars (cons `(,lc ,lc) cnf) (cons `(Fixed ,(neg l)) trail3)))
+                                  ; with learning by here
+                                  ; with backjumping from here
+                                  (let* {[lc (learn cl trail2)]
+                                         [trail4 (backjump lc trail3)]}
+                                    (print "backjumping")
+                                    (print trail2)
+                                    (print `(,cl ,lc))
+                                    (cdcl2 vars (cons `(,lc ,lc) cnf) (cons `(Fixed ,(neg l)) trail4)))
+                                  ; with backjumping by here
                                   ]
                                  [_ #f])]
                    ['[_ _]
-                    (cdcl2 (+ stage 1) vars cnf (cons `(Guessed [,(car vars2) ,(+ stage 1)]) trail2))]))))
+                    (cdcl2 vars cnf (cons `(Guessed ,(car vars2)) trail2))]))))
 
 (define cdcl
   (lambda [vars cnf]
-    (cdcl2 0 vars (to-cnf cnf) '{})))
+    (cdcl2 vars (to-cnf cnf) '{})))
 
 ;(print (cdcl '{} '{})) ; #t
 ;(print (cdcl '{} '{{}})) ; #f
@@ -483,5 +479,5 @@
    {-3 -40 8}
    {-23 -31 38}})
 
-;(print (cdcl (iota 20 1) problem20)) ; #t ; 0.597 (with learning and backjumping 2019/06/27 15:43)
-(print (cdcl (iota 50 1) problem50)) ; #f ; 22.086 (with learning and backjumping 2019/06/27 15:43)
+;(print (cdcl (iota 20 1) problem20)) ; #t ; 0.752 (2019/06/26 20:49)
+(print (cdcl (iota 50 1) problem50)) ; #f ; 51.551 (simple backtracking 2019/06/26 21:50) 34.394 (with learning: 2019/06/26 20:51) ; 27.600 (with learning and backjumping 2019/06/26 21:47)
