@@ -87,6 +87,27 @@
   (lambda [cnf]
     (map (lambda [c] (car c)) cnf)))
 
+(define init-vars
+  (lambda [vs]
+    (map (lambda [v] `(,v ,0)) vs)))
+
+(define add-vars
+  (lambda [vs vars]
+    (match-first `[,vs ,vars] `[,(List Literal) ,(List `[,Integer ,Integer])]
+                 ['[(nil) _]
+                  (sort vars > cadr)]
+                 ['[(cons v vs2) (join hs (cons '[,(abs v) c] ts))]
+                  (add-vars vs2 (append hs (cons `[,v ,(+ c 1)] ts)))]
+                 )))
+
+(define delete-var
+  (lambda [v vars]
+    (match-first vars (List `[,Integer ,Integer])
+                 [(join hs (cons '[,(abs v) _] ts))
+                  (append hs ts)]
+                 [_ 'error-in-delete-var]
+                 )))
+
 (define neg (lambda (x) (* -1 x)))
 (define neg2 (lambda (p) (cons (neg (car p)) (cdr p))))
 
@@ -120,7 +141,7 @@
                  ['[_ (cons '[(nil) _] _)] `(,vars ,cnf ,trail)]
                  ; 1-literal rule
                  ['[_ (cons '[(cons l (nil)) (cons ,l rs)] _)]
-                  (unit-propagate3 stage (delete (abs l) vars) (assign-true l cnf) (cons `(Deduced [,l ,stage] ,(map (lambda [r] `[,r ,(get-stage r trail)]) rs)) trail))]
+                  (unit-propagate3 stage (delete-var (abs l) vars) (assign-true l cnf) (cons `(Deduced [,l ,stage] ,(map (lambda [r] `[,r ,(get-stage r trail)]) rs)) trail))]
                  ; otherwise
                  ['[_ _] `(,vars ,cnf ,trail)]
                  )))
@@ -128,7 +149,7 @@
 (define unit-propagate2
   (lambda [stage vars cnf trail otrail]
     (match-first trail (List Assignment)
-                 [(cons (any-of '[l _]) trail2) (unit-propagate2 stage (delete (abs l) vars) (assign-true l cnf) trail2 otrail)]
+                 [(cons (any-of '[l _]) trail2) (unit-propagate2 stage (delete-var (abs l) vars) (assign-true l cnf) trail2 otrail)]
                  [_ (unit-propagate3 stage vars cnf otrail)])))
 
 (define unit-propagate
@@ -136,7 +157,8 @@
     (unit-propagate2 stage vars cnf trail trail)))
 
 (define cdcl2
-  (lambda [stage vars cnf trail]
+  (lambda [count stage vars cnf trail]
+    (print count)
     (print trail)
     (let-values {[(vars2 cnf2 trail2) (apply values (unit-propagate stage vars cnf trail))]}
       (match-first `[,vars2 ,cnf2] `[,(Multiset Integer) ,(Multiset `[,(Multiset Integer) ,Something])]
@@ -149,15 +171,15 @@
                                       (print "learning result:")
                                       (print `(,s ,cl ,lc))
 ;                                      (print trail2)
-                                      (cdcl2 s vars (cons `(,lc ,lc) cnf) trail4)))
+                                      (cdcl2 (+ count 1) s (add-vars (map abs lc) vars) (cons `(,lc ,lc) cnf) trail4)))
                                   ]
                                  [_ #f])]
                    ['[_ _]
-                    (cdcl2 (+ stage 1) vars cnf (cons `(Guessed [,(car vars2) ,(+ stage 1)]) trail2))]))))
+                    (cdcl2 (+ count 1) (+ stage 1) vars cnf (cons `(Guessed [,(neg (caar vars2)) ,(+ stage 1)]) trail2))]))))
 
 (define cdcl
   (lambda [vars cnf]
-    (cdcl2 0 vars (to-cnf cnf) '{})))
+    (cdcl2 0 0 (init-vars vars) (to-cnf cnf) '{})))
 
 ;(print (cdcl '{} '{})) ; #t
 ;(print (cdcl '{} '{{}})) ; #f
