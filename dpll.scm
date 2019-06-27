@@ -49,14 +49,15 @@
 (define unit-propagate3
   (lambda [vars cnf trail]
     (match-first `(,vars ,cnf) `(,(Multiset Integer) ,(Multiset (Multiset Integer)))
+                 ['[_ (cons (nil) _)] `(,vars ,cnf ,trail)]
                  ['[_ (cons (cons l (nil)) _)]
                   (unit-propagate3 (delete (abs l) vars) (assign-true l cnf) (cons `(Deduced ,l) trail))]
-                 ['[(cons v vs) (not (cons (cons (or ,v ,(neg v)) _) _))]
-                  (unit-propagate3 vs cnf trail)]
-                 ['[(cons v vs) (not (cons (cons ,(neg v) _) _))]
-                  (unit-propagate3 vs (assign-true v cnf) (cons `(Deduced ,v) trail))]
-                 ['[(cons v vs) (not (cons (cons ,v _) _))]
-                  (unit-propagate3 vs (assign-true (neg v) cnf) (cons `(Deduced ,(neg v)) trail))]
+;                 ['[(cons v vs) (not (cons (cons (or ,v ,(neg v)) _) _))]
+;                  (unit-propagate3 vs cnf trail)]
+;                 ['[(cons v vs) (not (cons (cons ,(neg v) _) _))]
+;                  (unit-propagate3 vs (assign-true v cnf) (cons `(Deduced ,v) trail))]
+;                 ['[(cons v vs) (not (cons (cons ,v _) _))]
+;                  (unit-propagate3 vs (assign-true (neg v) cnf) (cons `(Deduced ,(neg v)) trail))]
                  ['[_ _] `(,vars ,cnf ,trail)]
                  )))
 
@@ -419,5 +420,5 @@
    {-3 -40 8}
    {-23 -31 38}})
 
-(print (dpll (iota 20 1) problem20)) ; 1.218
-;(print (dpll (iota 50 1) problem50)) ; 1:29.14
+;(print (dpll (iota 20 1) problem20)) ; 1.218
+(print (dpll (iota 50 1) problem50)) ; 1:29.14
