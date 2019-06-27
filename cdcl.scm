@@ -94,9 +94,13 @@
                  ; 1-literal rule
                  ['[_ (cons '[(cons l (nil)) (cons ,l rs)] _)]
                   (unit-propagate3 (delete (abs l) vars) (assign-true l cnf) (cons `(Deduced ,l ,rs) trail))]
-                 ; the variable v does not appear
-;                 ['[(cons v vs) (and (not (cons '[(cons (or ,v ,(neg v)) _) _] _)) (cons '[_ (cons (or ,v ,(neg v)) rs)] _))]
-;                  (unit-propagate3 vs cnf (cons `(Deduced ,v ,rs) trail))]
+                 ; pure-literal rule (positive)
+;                 ['[(cons v vs) (not (cons '[(cons ,(neg v) _) _] _))]
+;                  (print "here")
+;                  (unit-propagate3 vs (assign-true v cnf) (cons `(Fixed ,v) trail))]
+                 ; pure-literal rule (negative)
+;                 ['[(cons v vs) (not (cons '[(cons ,v _) _] _))]
+;                  (unit-propagate3 vs (assign-true (neg v) cnf) (cons `(Fixed ,(neg v)) trail))]
                  ; otherwise
                  ['[_ _] `(,vars ,cnf ,trail)]
                  )))
@@ -138,17 +142,12 @@
                                   (let* {[lc (learn cl trail2)]
                                          [trail4 (backjump lc trail3)]}
                                     (print "backjumping")
-                                    (print lc)
+                                    (print trail2)
+                                    (print `(,cl ,lc))
                                     (cdcl2 vars (cons `(,lc ,lc) cnf) (cons `(Fixed ,(neg l)) trail4)))
                                   ; with backjumping by here
                                   ]
                                  [_ #f])]
-                   ; pure literal rule (buggy)
-;                   ['[(cons v _) (not '[(cons (cons ,(neg v) _) _) (cons (cons ,(neg v) rs) _)])]
-;                    (cdcl2 vars cnf (cons `(Decuded ,v ,rs) trail2))]
-                   ; pure literal rule (buggy)
-;                   ['[(cons v _) (not '[(cons (cons ,v _) _) (cons (cons ,v rs) _)])]
-;                    (cdcl2 vars cnf (cons `(Deduced ,(neg v) ,rs) trail2))]
                    ['[_ _]
                     (cdcl2 vars cnf (cons `(Guessed ,(car vars2)) trail2))]))))
 
@@ -480,5 +479,5 @@
    {-3 -40 8}
    {-23 -31 38}})
 
-(print (cdcl (iota 20 1) problem20)) ; #t ; 0.752 (2019/06/26 20:49)
-;(print (cdcl (iota 50 1) problem50)) ; #f ; 51.551 (simple backtracking 2019/06/26 21:50) 34.394 (with learning: 2019/06/26 20:51) ; 27.600 (with learning and backjumping 2019/06/26 21:47)
+;(print (cdcl (iota 20 1) problem20)) ; #t ; 0.752 (2019/06/26 20:49)
+(print (cdcl (iota 50 1) problem50)) ; #f ; 51.551 (simple backtracking 2019/06/26 21:50) 34.394 (with learning: 2019/06/26 20:51) ; 27.600 (with learning and backjumping 2019/06/26 21:47)
