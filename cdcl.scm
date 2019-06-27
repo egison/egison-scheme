@@ -89,8 +89,10 @@
 
 (define init-vars
   (lambda [vs]
-    (append (map (lambda [v] `(,v ,0)) vs)
-            (map (lambda [v] `(,(neg v) ,0)) vs))))
+    (append
+     (map (lambda [v] `(,(neg v) ,0)) vs)
+     (map (lambda [v] `(,v ,0)) vs)
+            )))
 
 (define add-vars
   (lambda [vs vars]
@@ -177,11 +179,8 @@
                                  [(join _ (cons (either '[l ,stage]) trail3))
                                   (let-values {[(s lc) (apply values (learn stage cl trail2))]}
                                     (let {[trail4 (backjump s trail3)]}
-;                                      (print "learning result:")
-;                                      (print `(,s ,cl ,lc))
-;                                      (print trail2)
-;                                      (print count)
-;                                      (print vars)
+                                      (print "learning result:")
+                                      (print `(,s ,cl ,lc))
                                       (cdcl2 (+ count 1) s (add-vars lc vars) (cons `(,lc ,lc) cnf) trail4)))
                                   ]
                                  [_ #f])]
@@ -517,5 +516,5 @@
    {-3 -40 8}
    {-23 -31 38}})
 
-(print (cdcl (iota 20 1) problem20)) ; #t ; (after implementing VSIDS 2019/06/27 17:30)
-;(print (cdcl (iota 50 1) problem50)) ; #f ; (after implementing VSIDS 2019/06/27 17:30)
+;(print (cdcl (iota 20 1) problem20)) ; #t ; (after implementing VSIDS 2019/06/27 17:30)
+(print (cdcl (iota 50 1) problem50)) ; #f ; (after implementing VSIDS 2019/06/27 17:30)
