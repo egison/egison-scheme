@@ -85,7 +85,7 @@
                  ['[_ (cons '[(nil) _] _)] `(,vars ,cnf ,trail)]
                  ; 1-literal rule
                  ['[_ (cons '[(cons l (nil)) (cons ,l rs)] _)]
-                  (unit-propagate3 stage (delete (abs l) vars) (assign-true l cnf) (cons `(Deduced [,l ,stage] ,(map (lambda [r] (get-stage r trail)) rs)) trail))]
+                  (unit-propagate3 stage (delete (abs l) vars) (assign-true l cnf) (cons `(Deduced [,l ,stage] ,(map (lambda [r] `[,r ,(get-stage r trail)]) rs)) trail))]
                  ; otherwise
                  ['[_ _] `(,vars ,cnf ,trail)]
                  )))
@@ -104,13 +104,16 @@
   (lambda [stage vars cnf trail]
 ;    (print "before")
 ;    (print `(,vars ,cnf ,trail))
-    (print trail)
+;    (print trail)
     (let-values {[(vars2 cnf2 trail2) (apply values (unit-propagate stage vars cnf trail))]}
 ;      (print "after")
 ;      (print `(,vars2 ,cnf2 ,trail2))
       (match-first `[,vars2 ,cnf2] `[,(Multiset Integer) ,(Multiset `[,(Multiset Integer) ,Something])]
                    ['[_ (nil)] #t]
                    ['[_ (cons '[(nil) cl] _)]
+                    (print "conflict:")
+                    (print cl)
+                    (print trail2)
                     (match-first trail2 (List Assignment)
                                  [(join _ (cons (guessed '[l s]) trail3))
                                   ; simple from here
