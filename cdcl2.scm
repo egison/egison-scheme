@@ -28,19 +28,54 @@
        (match t
          [('Fixed i) `{{[,pi ,Point ,i]}}]
          [_ `{}])]
-      [('either pi)
+      [('any-of pi)
        (match t
          [('Deduced i _) `{{[,pi ,Point ,i]}}]
          [('Guessed i) `{{[,pi ,Point ,i]}}]
          [('Fixed i) `{{[,pi ,Point ,i]}}]
          [_ `{}])]
-      [_ `not-defined])))
+      [('either pi)
+       (match t
+         [('Guessed i) `{{[,pi ,Point ,i]}}]
+         [('Fixed i) `{{[,pi ,Point ,i]}}]
+         [_ `{}])]
+      [_ 'error-not-defined-in-Assignment])))
 
 (define get-stage
   (lambda [l trail]
     (match-first trail (List Assignment)
-                 [(join _ (cons (either '[,(neg l) s]) _)) s]
+                 [(join _ (cons (any-of '[,(neg l) s]) _)) s]
                  [_ 'error-no-stage])))
+
+(define learn3
+  (lambda [stage cp trail]
+    (match-first `[,trail ,cp] `[,(List Assignment) ,(Multiset Point)]
+                 ['[(cons (deduced '[l ,stage] ds) trail2)
+                    (cons '[,(neg l) ,stage] rp)]
+                  (learn2 stage (lset-union equal? rp ds) trail2)]
+                 ['[(cons (deduced '[_ _] _) trail2) _]
+                  (learn3 stage cp trail2)]
+                 ['[_ _] 'error-learn3])))
+
+(define learn2
+  (lambda [stage cp trail]
+    (match-first cp (List Point)
+                 [(not (join _ (cons '[_ ,stage] (join _ (cons '[_ ,stage] _)))))
+                  `(,(apply min (map cadr cp)) ,(map car cp))]
+                 [_ (learn3 stage cp trail)]
+                 )))
+
+(define learn
+  (lambda [stage cl trail]
+    (learn2 stage (map (lambda [l] `[,l ,(get-stage l trail)]) cl) trail)))
+
+(define backjump
+  (lambda [s trail]
+    (match-first trail (List Assignment)
+                 [(join _ (and (cons (either '[_ ,s]) _) trail2))
+                  trail2]
+                 [_ trail]
+                 )))
 
 (define to-cnf
   (lambda [cs]
@@ -93,7 +128,7 @@
 (define unit-propagate2
   (lambda [stage vars cnf trail otrail]
     (match-first trail (List Assignment)
-                 [(cons (either '[l _]) trail2) (unit-propagate2 stage (delete (abs l) vars) (assign-true l cnf) trail2 otrail)]
+                 [(cons (any-of '[l _]) trail2) (unit-propagate2 stage (delete (abs l) vars) (assign-true l cnf) trail2 otrail)]
                  [_ (unit-propagate3 stage vars cnf otrail)])))
 
 (define unit-propagate
@@ -102,22 +137,19 @@
 
 (define cdcl2
   (lambda [stage vars cnf trail]
-;    (print "before")
-;    (print `(,vars ,cnf ,trail))
-;    (print trail)
+    (print trail)
     (let-values {[(vars2 cnf2 trail2) (apply values (unit-propagate stage vars cnf trail))]}
-;      (print "after")
-;      (print `(,vars2 ,cnf2 ,trail2))
       (match-first `[,vars2 ,cnf2] `[,(Multiset Integer) ,(Multiset `[,(Multiset Integer) ,Something])]
                    ['[_ (nil)] #t]
                    ['[_ (cons '[(nil) cl] _)]
-                    (print "conflict:")
-                    (print cl)
-                    (print trail2)
                     (match-first trail2 (List Assignment)
-                                 [(join _ (cons (guessed '[l s]) trail3))
-                                  ; simple from here
-                                  (cdcl2 s vars cnf (cons `(Fixed [,(neg l) ,s]) trail3)) ; without learning
+                                 [(join _ (cons (either '[l ,stage]) trail3))
+                                  (let-values {[(s lc) (apply values (learn stage cl trail2))]}
+                                    (let {[trail4 (backjump s trail3)]}
+                                      (print "learning result:")
+                                      (print `(,s ,cl ,lc))
+;                                      (print trail2)
+                                      (cdcl2 s vars (cons `(,lc ,lc) cnf) trail4)))
                                   ]
                                  [_ #f])]
                    ['[_ _]
@@ -451,5 +483,5 @@
    {-3 -40 8}
    {-23 -31 38}})
 
-(print (cdcl (iota 20 1) problem20)) ; #t ; 0.752 (2019/06/26 20:49)
-;(print (cdcl (iota 50 1) problem50)) ; #f ; 51.551 (simple backtracking 2019/06/26 21:50) 34.394 (with learning: 2019/06/26 20:51) ; 27.600 (with learning and backjumping 2019/06/26 21:47)
+;(print (cdcl (iota 20 1) problem20)) ; #t ; 0.597 (with learning and backjumping 2019/06/27 15:43)
+(print (cdcl (iota 50 1) problem50)) ; #f ; 22.086 (with learning and backjumping 2019/06/27 15:43)

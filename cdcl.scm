@@ -62,7 +62,6 @@
                  [_ trail]
                  )))
 
-
 (define delete-literal
   (lambda [l cnf]
     (map (lambda [c] (cons (match-all (car c) (Multiset Integer)
@@ -131,6 +130,7 @@
                                   ; simple from here
 ;                                  (cdcl2 vars cnf (cons `(Fixed ,(neg l)) trail3)) ; without learning
                                   ; simple by here
+                                  ; with learning from here
 ;                                  (let {[lc (learn cl trail2)]}
 ;                                    (print "learning result:")
 ;                                    (print trail2)

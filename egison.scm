@@ -98,6 +98,7 @@
     (match p
            (('val _) '())
            (('pred _) '())
+           (('or pat . _) (extract-pattern-variables pat))
            (('quote args)
             (concatenate (map extract-pattern-variables args)))
            ((c . args)
@@ -138,6 +139,8 @@
     (match mState
            (('MState {[('quote (? list? ps)) (? list? Ms) ts] . mStack} ret)
             (list `(MState ,(append (zip3 ps Ms ts) mStack) ,ret)))
+           (('MState {[p (? list? Ms) t] . mStack} ret)
+            (list `(MState ,(cons `(,p Something ,t) mStack) ,ret)))
            (('MState {[('val f) M t] . mStack} ret)
             (let {[next-matomss (M `(val ,(apply f ret)) t)]}
               (map (lambda (next-matoms) `(MState ,(append next-matoms mStack) ,ret)) next-matomss)))
