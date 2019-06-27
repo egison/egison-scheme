@@ -135,35 +135,44 @@
 ; (assign-true -1 (to-cnf '{{1 2} {-1 3} {1 -3}}))
 
 (define unit-propagate3
-  (lambda [stage vars cnf trail]
-    (match-first `(,vars ,cnf) `(,(Multiset Integer) ,(Multiset `[,(Multiset Integer) ,(Multiset Integer)]))
+  (lambda [stage cnf trail]
+    (match-first cnf (Multiset `[,(Multiset Integer) ,(Multiset Integer)])
                  ; empty clause
-                 ['[_ (cons '[(nil) _] _)] `(,vars ,cnf ,trail)]
+                 [(cons '[(nil) _] _) `(,cnf ,trail)]
                  ; 1-literal rule
-                 ['[_ (cons '[(cons l (nil)) (cons ,l rs)] _)]
-                  (unit-propagate3 stage (delete-var (abs l) vars) (assign-true l cnf) (cons `(Deduced [,l ,stage] ,(map (lambda [r] `[,r ,(get-stage r trail)]) rs)) trail))]
+                 [(cons '[(cons l (nil)) (cons ,l rs)] _)
+                  (unit-propagate3 stage (assign-true l cnf) (cons `(Deduced [,l ,stage] ,(map (lambda [r] `[,r ,(get-stage r trail)]) rs)) trail))]
                  ; otherwise
-                 ['[_ _] `(,vars ,cnf ,trail)]
+                 [_ `(,cnf ,trail)]
                  )))
 
 (define unit-propagate2
-  (lambda [stage vars cnf trail otrail]
+  (lambda [stage cnf trail otrail]
     (match-first trail (List Assignment)
-                 [(cons (any-of '[l _]) trail2) (unit-propagate2 stage (delete-var (abs l) vars) (assign-true l cnf) trail2 otrail)]
-                 [_ (unit-propagate3 stage vars cnf otrail)])))
+                 [(cons (any-of '[l _]) trail2) (unit-propagate2 stage (assign-true l cnf) trail2 otrail)]
+                 [_ (unit-propagate3 stage cnf otrail)])))
 
 (define unit-propagate
-  (lambda [stage vars cnf trail]
-    (unit-propagate2 stage vars cnf trail trail)))
+  (lambda [stage cnf trail]
+    (unit-propagate2 stage cnf trail trail)))
+
+(define choose
+  (lambda [vars trail]
+    (match-first `[,vars ,trail] `[,(List `[,Integer ,Integer]) ,(List Assignment)]
+                 ['[(cons '[v _] vars2) (join _ (cons (any-of '[(or ,v ,(neg v)) _]) _))]
+                  (choose vars2 trail)]
+                 ['[(cons '[v _] _) _]
+                  (neg v)]
+                 )))
 
 (define cdcl2
   (lambda [count stage vars cnf trail]
-;    (print count)
-;    (print trail)
-    (let-values {[(vars2 cnf2 trail2) (apply values (unit-propagate stage vars cnf trail))]}
-      (match-first `[,vars2 ,cnf2] `[,(Multiset Integer) ,(Multiset `[,(Multiset Integer) ,Something])]
-                   ['[_ (nil)] #t]
-                   ['[_ (cons '[(nil) cl] _)]
+    (print count)
+    (print trail)
+    (let-values {[(cnf2 trail2) (apply values (unit-propagate stage cnf trail))]}
+      (match-first cnf2 (Multiset `[,(Multiset Integer) ,Something])
+                   [(nil) #t]
+                   [(cons '[(nil) cl] _)
                     (match-first trail2 (List Assignment)
                                  [(join _ (cons (either '[l ,stage]) trail3))
                                   (let-values {[(s lc) (apply values (learn stage cl trail2))]}
@@ -171,13 +180,14 @@
 ;                                      (print "learning result:")
 ;                                      (print `(,s ,cl ,lc))
 ;                                      (print trail2)
-                                      (print count)
-                                      (print vars2)
+;                                      (print count)
+;                                      (print vars)
                                       (cdcl2 (+ count 1) s (add-vars lc vars) (cons `(,lc ,lc) cnf) trail4)))
                                   ]
                                  [_ #f])]
-                   ['[_ _]
-                    (cdcl2 (+ count 1) (+ stage 1) vars cnf (cons `(Guessed [,(neg (caar vars2)) ,(+ stage 1)]) trail2))]))))
+                   [_
+                    (let {[gl (choose vars trail2)]}
+                      (cdcl2 (+ count 1) (+ stage 1) vars cnf (cons `(Guessed [,gl ,(+ stage 1)]) trail2)))]))))
 
 (define cdcl
   (lambda [vars cnf]
@@ -507,5 +517,5 @@
    {-3 -40 8}
    {-23 -31 38}})
 
-;(print (cdcl (iota 20 1) problem20)) ; #t ; (after implementing VSIDS 2019/06/27 17:30)
-(print (cdcl (iota 50 1) problem50)) ; #f ; (after implementing VSIDS 2019/06/27 17:30)
+(print (cdcl (iota 20 1) problem20)) ; #t ; (after implementing VSIDS 2019/06/27 17:30)
+;(print (cdcl (iota 50 1) problem50)) ; #f ; (after implementing VSIDS 2019/06/27 17:30)
