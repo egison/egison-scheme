@@ -3,41 +3,33 @@
 
 (load "./egison.scm")
 
-;; buggy for value pattern
-(define Literal
-  (lambda (p t)
-    (match p
-      [('whichever pi) `{{[,pi ,Integer ,t]}}]
-      [_ `{{[,p ,Integer ,t]}}])))
+(define TaggedLiteral `[,Integer ,Integer])
 
-(define Point `[,Integer ,Integer])
-
-;; buggy for value pattern
 (define Assignment
   (lambda (p t)
     (match p
       [('deduced pi pls)
        (match t
-         [('Deduced i ls) `{{[,pi ,Point ,i] [,pls ,(Multiset Point) ,ls]}}]
+         [('Deduced i ls) `{{[,pi ,TaggedLiteral ,i] [,pls ,(Multiset TaggedLiteral) ,ls]}}]
          [_ `{}])]
       [('guessed pi)
        (match t
-         [('Guessed i) `{{[,pi ,Point ,i]}}]
+         [('Guessed i) `{{[,pi ,TaggedLiteral ,i]}}]
          [_ `{}])]
       [('Fixed pi)
        (match t
-         [('Fixed i) `{{[,pi ,Point ,i]}}]
+         [('Fixed i) `{{[,pi ,TaggedLiteral ,i]}}]
          [_ `{}])]
-      [('any-of pi)
+      [('whichever pi)
        (match t
-         [('Deduced i _) `{{[,pi ,Point ,i]}}]
-         [('Guessed i) `{{[,pi ,Point ,i]}}]
-         [('Fixed i) `{{[,pi ,Point ,i]}}]
+         [('Deduced i _) `{{[,pi ,TaggedLiteral ,i]}}]
+         [('Guessed i) `{{[,pi ,TaggedLiteral ,i]}}]
+         [('Fixed i) `{{[,pi ,TaggedLiteral ,i]}}]
          [_ `{}])]
       [('either pi)
        (match t
-         [('Guessed i) `{{[,pi ,Point ,i]}}]
-         [('Fixed i) `{{[,pi ,Point ,i]}}]
+         [('Guessed i) `{{[,pi ,TaggedLiteral ,i]}}]
+         [('Fixed i) `{{[,pi ,TaggedLiteral ,i]}}]
          [_ `{}])]
       [_ 'error-not-defined-in-Assignment])))
 
@@ -59,7 +51,7 @@
 
 (define add-vars
   (lambda [vs vars]
-    (match-first `[,vs ,vars] `[,(List Literal) ,(List `[,Integer ,Integer])]
+    (match-first `[,vs ,vars] `[,(List Integer) ,(List `[,Integer ,Integer])]
                  ['[(nil) _]
                   (sort vars > cadr)]
                  ['[(cons v vs2) (join hs (cons '[,v c] ts))]
@@ -74,7 +66,7 @@
 (define get-stage
   (lambda [l trail]
     (match-first trail (List Assignment)
-                 [(join _ (cons (any-of '[,(neg l) s]) _)) s]
+                 [(join _ (cons (whichever '[,(neg l) s]) _)) s]
                  [_ 'error-no-stage])))
 
 (define delete-literal
@@ -107,7 +99,7 @@
 (define unit-propagate2
   (lambda [stage cnf trail otrail]
     (match-first trail (List Assignment)
-                 [(cons (any-of '[l _]) trail2) (unit-propagate2 stage (assign-true l cnf) trail2 otrail)]
+                 [(cons (whichever '[l _]) trail2) (unit-propagate2 stage (assign-true l cnf) trail2 otrail)]
                  [_ (unit-propagate3 stage cnf otrail)])))
 
 (define unit-propagate
@@ -116,7 +108,7 @@
 
 (define learn3
   (lambda [stage cp trail]
-    (match-first `[,trail ,cp] `[,(List Assignment) ,(Multiset Point)]
+    (match-first `[,trail ,cp] `[,(List Assignment) ,(Multiset TaggedLiteral)]
                  ['[(cons (deduced '[l ,stage] ds) trail2)
                     (cons '[,(neg l) ,stage] rp)]
                   (learn2 stage (lset-union equal? rp ds) trail2)]
@@ -126,7 +118,7 @@
 
 (define learn2
   (lambda [stage cp trail]
-    (match-first cp (List Point)
+    (match-first cp (List TaggedLiteral)
                  [(not (join _ (cons '[_ ,stage] (join _ (cons '[_ ,stage] _)))))
                   `(,(apply min (map cadr cp)) ,(map car cp))]
                  [_ (learn3 stage cp trail)])))
@@ -145,7 +137,7 @@
 (define choose
   (lambda [vars trail]
     (match-first `[,vars ,trail] `[,(List `[,Integer ,Integer]) ,(List Assignment)]
-                 ['[(cons '[v _] vars2) (join _ (cons (any-of '[(or ,v ,(neg v)) _]) _))]
+                 ['[(cons '[v _] vars2) (join _ (cons (whichever '[(or ,v ,(neg v)) _]) _))]
                   (choose vars2 trail)]
                  ['[(cons '[v _] _) _]
                   (neg v)])))
