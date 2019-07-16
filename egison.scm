@@ -225,18 +225,19 @@
   (lambda (M)
     (lambda (p t)
       (match p
-        (('nil) (if (eq? t '()) '{{}} '{}))
-        (('cons px '_) (map (lambda (x) `{[,px ,M ,x]}) t))
-        (('cons px py)
+        [('nil) (if (eq? t '{}) '{{}} '{})]
+        [('cons px '_) (map (lambda (x) `{[,px ,M ,x]}) t)]
+        [('cons px py)
          (map (lambda (xy) `{[,px ,M ,(car xy)] [,py ,(Multiset M) ,(cadr xy)]})
               (match-all t (List M)
-                [(join hs (cons x ts)) `(,x ,(append hs ts))])))
-        (('val v)
-         (match-first `(,v ,t) `(,(List M) ,(Multiset M))
-           ('((nil) (nil)) '{{}})
-           ('((cons x xs) (cons ,x ,xs)) '{{}})
-           ('(_ _) '{})))
-        (pvar `{{[,pvar Something ,t]}})))))
+                [(join hs (cons x ts)) `[,x ,(append hs ts)]]))]
+        [('val v)
+         (match-first `[,t ,v] `[,(List M) ,(Multiset M)]
+           ['[(nil) (nil)] '{{}}]
+           ['[(cons x xs) (cons ,x ,xs)] '{{}}]
+           ['[_ _] '{}])]
+        [pvar `{{[,pvar Something ,t]}}]))))
+
 
 ;;
 ;; Utility functions

@@ -491,5 +491,5 @@
    {-3 -40 8}
    {-23 -31 38}})
 
-;(print (cdcl (iota 20 1) problem20)) ; #t ; 0.538 (after implementing VSIDS 2019/06/27 17:30)
-(print (cdcl (iota 50 1) problem50)) ; #f ; 14.106 (after implementing VSIDS 2019/06/27 17:30)
+(print (cdcl (iota 20 1) problem20)) ; #t ; 0.538 (after implementing VSIDS 2019/06/27 17:30)
+;(print (cdcl (iota 50 1) problem50)) ; #f ; 14.106 (after implementing VSIDS 2019/06/27 17:30)
