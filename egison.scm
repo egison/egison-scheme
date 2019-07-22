@@ -18,7 +18,8 @@
       (let* {[clause (car clauses)]
              [p (rewrite-pattern (list 'quasiquote (car clause)))]
              [es (cdr clause)]}
-        `(append (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) ,(cons 'begin es)) ret)) (gen-match-results ,p ,M ,t))
+        `(append (map (lambda (ret) (apply (lambda ,(extract-pattern-variables p) . ,es) ret))
+                      (gen-match-results ,p ,M ,t))
                  (match-all ,t ,M . ,(cdr clauses))))))
 
 (define-macro (match-first t M . clauses)
@@ -108,11 +109,13 @@
            (pvar `(,pvar))
            )))
 
-(define-macro (gen-match-results p M t)
-  `(processMStates (list (list 'MState (list (list ,p ,M ,t) ) {}))))
+(define gen-match-results
+  (lambda (p M t)
+    (processMStates `{(MState {[,p ,M ,t]} {})})))
 
-(define-macro (gen-first-match-result p M t)
-  `(processMStates1 (list (list 'MState (list (list ,p ,M ,t) ) {}))))
+(define gen-first-match-result
+  (lambda (p M t)
+    (processMStates1 `{(MState {[,p ,M ,t]} {})})))
 
 (define processMStates
   (lambda (mStates)

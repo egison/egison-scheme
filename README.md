@@ -1,6 +1,6 @@
 # Scheme Macros for Egison Pattern Matching
 
-This Scheme library provides users with macros for pattern matching against non-free data types.
+This Scheme library provides the users with macros for pattern matching against non-free data types.
 This pattern-matching facility is originally proposed in [this paper](https://arxiv.org/abs/1808.10603) and implemented in [the Egison programming language](http://github.com/egison/egison/).
 
 We have tested this library on [Gauche](http://practical-scheme.net/gauche/) 0.9.6.
@@ -11,9 +11,9 @@ Draft paper for this Scheme library: [github.com/egisatoshi/macro-paper](https:/
 
 Non-free data types are data types whose data have no standard forms.
 For example, multisets are non-free data types because the multiset {a,b,b} has two other equivalent but literally different forms {b,a,b} and {b,b,a}.
-This library provides users with a pattern-matching facility for these non-free data types.
+This library provides the users with a pattern-matching facility for these non-free data types.
 
-For example, the following program pattern-matches a list `(1 2 3 2 1)` as a multiset.
+For example, the following program pattern-matches a list `(1 2 5 9 4)` as a multiset.
 This pattern matches if the target collection contains pairs of elements in sequence.
 A non-linear pattern is effectively used for expressing the pattern.
 
@@ -25,10 +25,10 @@ A non-linear pattern is effectively used for expressing the pattern.
 ```
 
 `match-all` returns a list of all the results.
-We provides two types of `match-all` that returns a list and stream.
+We provide two types of `match-all` that return a list and a stream, respectively.
 `egison.scm` provides the list version.
 `stream-egison.scm` provides the stream version.
-`match-all` of `stream-egison.scm` supports pattern matching with infinitely many results as follows.
+`match-all` of `stream-egison.scm` supports pattern matching with infinitely many results.
 
 ```
 (use math.prime)
@@ -56,6 +56,7 @@ For more examples, please see [test.scm](https://github.com/egison/egison-scheme
 - [The basic list processing functions defined in pattern-matching-oriented programming style](https://github.com/egison/egison-scheme/blob/master/pattern-matching-oriented-programming-style.scm)
 - [Poker hands](https://github.com/egison/egison-scheme/blob/master/poker.scm)
 - [SAT solver (Davis-Putnam Algorithm)](https://github.com/egison/egison-scheme/blob/master/dp.scm)
+- [SAT solver (CDCL)](https://github.com/egison/egison-scheme/blob/master/cdcl.scm)
 
 ### Lazy pattern matching
 
@@ -63,11 +64,12 @@ For more examples, please see [test.scm](https://github.com/egison/egison-scheme
 
 ## Syntax
 
-The following figure shows formal syntax of `match-all` and the patterns.
+Here is the formal syntax of `match-all`, `match-first`, and the patterns.
 `e`, `M`, `p`, and `x` are a metavariable that denotes an expression, matcher, pattern, and symbol, respectively.
 
 ```
 (match-all e M [p e*]*)
+(match-first e M [p e*]*)
 
 p = x        (pattern variable)
  | ,e        (value pattern)
@@ -80,8 +82,8 @@ p = x        (pattern variable)
 
 ### Match-all
 
-`Match-all` is a syntax construct for pattern matching provided by our library.
-`Match-all` takes a target and match-clauses as the match expressions of the other functional programming languages.
+`match-all` is a syntax construct for pattern matching provided by our library.
+`match-all` takes a target and match-clauses as the match expressions of the other functional programming languages.
 However, `match-all` has two characteristic parts: (i) its name is match-"all", and (ii) it takes an additional argument a <i>matcher</i> as its second argument.
 
 First, `match-all` evaluates the body for <b>all</b> the pattern-matching results and returns a list of the evaluation results.
