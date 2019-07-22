@@ -67,7 +67,7 @@ The following figure shows formal syntax of `match-all` and the patterns.
 `e`, `M`, `p`, and `x` are a metavariable that denotes an expression, matcher, pattern, and symbol, respectively.
 
 ```
-(match-all e M [p e])
+(match-all e M [p e*]*)
 
 p = x        (pattern variable)
  | ,e        (value pattern)
@@ -108,6 +108,18 @@ The reason is because `cons` for the multiset has multiple decompositions since 
 A matcher is defined in Scheme in our library.
 Users can define their own matchers in Scheme.
 
+### Match-first
+
+The `match-first` is similar to the traditional `match` expression; it evaluates the body of the first match clause whose pattern matches with the target.
+
+```
+(match-first '(1 2 3) (Multiset Integer) [(cons x xs) `(,x ,xs)])
+; (1 (2 3))
+```
+
+We do not use the name `match` to avoid the name conflict with Wright's `match`because Wright's `match` plays fundamental role for defining a user-defined matcher.
+The only difference between `match-first` and the traditional `match` expression is `match-first` takes a matcher.
+
 ### Value patterns
 
 Our pattern-matching system supports <i>non-linear patterns</i>.
@@ -123,6 +135,19 @@ The expression after `,` is evaluated referring to the value bound to the patter
 (match-all '(1 2 5 9 4) (Multiset Integer) [(cons x (cons ,(+ x 1) _)) x])
 ; (1 4)
 ```
+
+### Tuple patterns
+
+Tuple patterns are represented by prepending `'` to a list of patterns.
+Each element of a tuple pattern is pattern-matched with the corresponding element of a target list using the corresponding element of a matcher list as a matcher.
+
+```
+(match-all '[1 2] `[,Integer ,Integer] ['[x y] `(,x ,y)]) ; ((1 2))
+(match-all '[1 2 3] `[,Integer ,Integer ,Integer] ['[x y z] `(,x ,y ,z)]) ; ((1 2 3))
+```
+
+Preppending `'` is important to distinguish a tuple pattern from a inductive pattern.
+For example, `'[x y]` cannot be distinguished from an constructor pattern whose constructor is `x` if `'` is not prepended.
 
 ### Or-patterns, and-patterns, and not-patterns
 
