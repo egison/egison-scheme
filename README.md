@@ -130,9 +130,9 @@ A non-linear pattern is a pattern that allows multiple occurrences of identical 
 Non-linear pattern is especially useful for pattern matching against non-free data types.
 For example, we can write a pattern that matches if the target collection contains a pair of identical elements.
 
-A pattern that is prepend with `\\`` is called a <i>value-pattern</i>.
+A pattern that is prepend with <code>`</code> is called a <i>value-pattern</i>.
 Value patterns match the target if the target is equal to the content of the value pattern.
-The expression after `\\`` is evaluated referring to the value bound to the pattern variables that appear left-side of the patterns.
+The expression after <code>`</code> is evaluated referring to the value bound to the pattern variables that appear left-side of the patterns.
 
 ```
 (match-all '(1 2 5 9 4) (Multiset Integer) [(cons x (cons `(+ x 1) _)) x])
