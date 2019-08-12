@@ -47,20 +47,20 @@ We provide two types of `match-all` that return a list and a stream, respectivel
 ; ((3 5) (5 7) (11 13) (17 19) (29 31) (41 43) (59 61) (71 73) (101 103) (107 109))
 ```
 
-For more examples, please see [test.scm](https://github.com/egison/egison-scheme/blob/master/test.scm) and the following samples for now.
+For more examples, please see the following samples.
 
 ## Samples
 
 ### Strict pattern matching
 
-- [The basic list processing functions defined in pattern-matching-oriented programming style](https://github.com/egison/egison-scheme/blob/master/pattern-matching-oriented-programming-style.scm)
-- [Poker hands](https://github.com/egison/egison-scheme/blob/master/poker.scm)
-- [SAT solver (Davis-Putnam Algorithm)](https://github.com/egison/egison-scheme/blob/master/dp.scm)
-- [SAT solver (CDCL)](https://github.com/egison/egison-scheme/blob/master/cdcl.scm)
+- [The basic list processing functions defined in pattern-matching-oriented programming style](https://github.com/egison/egison-scheme/blob/master/sample/pattern-matching-oriented-programming-style.scm)
+- [Poker hands](https://github.com/egison/egison-scheme/blob/master/sample/poker.scm)
+- [SAT solver (Davis-Putnam Algorithm)](https://github.com/egison/egison-scheme/blob/master/sample/SAT/dp.scm)
+- [SAT solver (CDCL)](https://github.com/egison/egison-scheme/blob/master/sample/SAT/cdcl.scm)
 
 ### Lazy pattern matching
 
-- [Twin primes](https://github.com/egison/egison-scheme/blob/master/primes.scm)
+- [Twin primes](https://github.com/egison/egison-scheme/blob/master/sample/primes.scm)
 
 ## Syntax
 
