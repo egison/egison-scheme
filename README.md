@@ -20,7 +20,7 @@ A non-linear pattern is effectively used for expressing the pattern.
 ```
 (load "./egison.scm")
 
-(match-all '(1 2 5 9 4) (Multiset Integer) [(cons x (cons ,(+ x 1) _)) x])
+(match-all '(1 2 5 9 4) (Multiset Integer) [(cons x (cons `(+ x 1) _)) x])
 ; (1 4)
 ```
 
@@ -41,7 +41,7 @@ We provide two types of `match-all` that return a list and a stream, respectivel
 (stream->list
  (stream-take
   (match-all stream-primes (List Integer)
-             [(join _ (cons p (cons ,(+ p 2) _)))
+             [(join _ (cons p (cons `(+ p 2) _)))
               `(,p ,(+ p 2))])
   10))
 ; ((3 5) (5 7) (11 13) (17 19) (29 31) (41 43) (59 61) (71 73) (101 103) (107 109))
@@ -72,7 +72,8 @@ Here is the formal syntax of `match-all`, `match-first`, and the patterns.
 (match-first e M [p e*]*)
 
 p = x        (pattern variable)
- | ,e        (value pattern)
+ | `e        (value pattern)
+ | '(p*)     (tuple pattern)
  | (c p*)    (inductive pattern)
  | (and p*)  (and-pattern)
  | (or p*)   (or-pattern)
@@ -129,12 +130,12 @@ A non-linear pattern is a pattern that allows multiple occurrences of identical 
 Non-linear pattern is especially useful for pattern matching against non-free data types.
 For example, we can write a pattern that matches if the target collection contains a pair of identical elements.
 
-A pattern that is prepend with `,` is called a <i>value-pattern</i>.
+A pattern that is prepend with `\`` is called a <i>value-pattern</i>.
 Value patterns match the target if the target is equal to the content of the value pattern.
-The expression after `,` is evaluated referring to the value bound to the pattern variables that appear left-side of the patterns.
+The expression after `\`` is evaluated referring to the value bound to the pattern variables that appear left-side of the patterns.
 
 ```
-(match-all '(1 2 5 9 4) (Multiset Integer) [(cons x (cons ,(+ x 1) _)) x])
+(match-all '(1 2 5 9 4) (Multiset Integer) [(cons x (cons `(+ x 1) _)) x])
 ; (1 4)
 ```
 
@@ -156,21 +157,21 @@ For example, `'[x y]` cannot be distinguished from an constructor pattern whose 
 An or-pattern matches if one of the argument patterns matches the target.
 
 ```
-(match-all '(1 2 3) (List Integer) [(cons (or ,1 ,10) _) "OK"])
+(match-all '(1 2 3) (List Integer) [(cons (or `1 `10) _) "OK"])
 ; ("OK")
 ```
 
 An and-pattern matches if all the argument patterns match the target.
 
 ```
-(match-all '(1 2 3) (List Integer) [(cons (and ,1 x) _) x])
+(match-all '(1 2 3) (List Integer) [(cons (and `1 x) _) x])
 ; (1)
 ```
 
 A not-pattern matches if the argument pattern does not match the target.
 
 ```
-(match-all '(1 2 3) (List Integer) [(cons x (not (cons ,x _))) x])
+(match-all '(1 2 3) (List Integer) [(cons x (not (cons `x _))) x])
 ; (1)
 ```
 
@@ -182,7 +183,7 @@ However, we sometimes want this order, for example, to refer to the value bound 
 A later pattern can be used for such purpose.
 
 ```
-(match-all '(1 1 2 3) (List Integer) [(cons (later ,x) (cons x _)) x])
+(match-all '(1 1 2 3) (List Integer) [(cons (later `x) (cons x _)) x])
 ; (1)
 ```
 
