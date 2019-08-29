@@ -49,7 +49,7 @@
 (define learn
   (lambda [cl trail]
     (match-first `[,cl ,trail] `[,(Multiset Integer) ,(Multiset Assignment)]
-                 ['[(cons l ls) (cons (deduced ,(neg l) ds) _)] (learn (lset-union eq? ls ds) trail)]
+                 ['[(cons l ls) (cons (deduced ,(neg l) ds) _)] (learn (lset-union equal? ls ds) trail)]
                  ['[_ _] cl])))
 
 (define backjump
