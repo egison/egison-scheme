@@ -179,7 +179,7 @@
   (lambda (p t)
     (match p
            (('val x)
-            (if (eq? x t)
+            (if (equal? x t)
                 '(())
                 '()))
            (pvar

@@ -5,7 +5,7 @@ This pattern-matching facility is originally proposed in [this paper](https://ar
 
 We have tested this library on [Gauche](http://practical-scheme.net/gauche/) 0.9.6.
 
-Draft paper for this Scheme library: [github.com/egisatoshi/macro-paper](https://github.com/egisatoshi/macro-paper/blob/master/main.pdf)
+Draft paper for this Scheme library (presented at Scheme Workshop 2019): [github.com/egisatoshi/macro-paper](https://github.com/egisatoshi/macro-paper/blob/master/main.pdf)
 
 ## Usage
 

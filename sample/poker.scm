@@ -28,7 +28,6 @@
            (pvar
             `(((,pvar Something ,t)))))))
 
-
 (define poker-hand
   (lambda (cs)
     (match-first cs (Multiset Card)
